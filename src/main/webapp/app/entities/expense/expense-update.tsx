@@ -106,7 +106,7 @@ export const ExpenseUpdate = () => {
                 type="text"
                 validate={{
                   required: { value: true, message: 'This field is required.' },
-                  max: { value: 0, message: 'This field cannot be more than 0.' },
+                  min: { value: 0, message: 'This field cannot be less than 0.' },
                   validate: v => isNumber(v) || 'This field should be a number.',
                 }}
               />

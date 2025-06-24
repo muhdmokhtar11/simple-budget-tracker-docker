@@ -15,7 +15,7 @@ public class ExpenseDTO implements Serializable {
     private Long id;
 
     @NotNull
-    @DecimalMax(value = "0")
+    @DecimalMin(value = "0")
     private BigDecimal amount;
 
     @Size(max = 255)

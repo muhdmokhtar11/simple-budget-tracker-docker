@@ -1,4 +1,3 @@
-
 entity Category {
   name String required maxlength(50)
   description String maxlength(255)
@@ -11,7 +10,7 @@ entity Income {
 }
 
 entity Expense {
-  amount BigDecimal required max(0)
+  amount BigDecimal required min(0)
   description String maxlength(255)
   date Instant required
 }

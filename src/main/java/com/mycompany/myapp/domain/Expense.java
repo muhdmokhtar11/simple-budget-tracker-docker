@@ -22,7 +22,7 @@ public class Expense implements Serializable {
     private Long id;
 
     @NotNull
-    @DecimalMax(value = "0")
+    @DecimalMin(value = "0")
     @Column(name = "amount", precision = 21, scale = 2, nullable = false)
     private BigDecimal amount;
 
