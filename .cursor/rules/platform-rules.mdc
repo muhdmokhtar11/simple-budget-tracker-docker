@@ -1,0 +1,55 @@
+```json
+{
+  "name": "Budget Planner - Income and Expense Tracking",
+  "description": "Guides the AI to understand and generate code for a budget planner web application, focusing on income and expense tracking with user-defined categories, and a clear, intuitive UI/UX.",
+  "triggers": [
+    {
+      "type": "file_extension",
+      "values": [".js", ".jsx", ".ts", ".tsx", ".py", ".java", ".html", ".css", ".sql"]
+    },
+    {
+      "type": "file_content",
+      "contains": ["budget", "income", "expense", "category", "finance", "amount", "transaction", "outflow", "inflow", "financial planning", "budgeting"]
+    },
+    {
+      "type": "prompt_content",
+      "contains": ["budget planner", "add income", "add expense", "user-defined categories", "track finances", "financial inflows", "financial outflows", "budgeting app", "expense tracker"]
+    }
+  ],
+  "actions": [
+    {
+      "type": "set_context",
+      "context": {
+        "domain": "Personal Finance Budget Planner",
+        "purpose": "Tracking income and expenses with user-defined categories for effective financial management.",
+        "features": [
+          "Adding Income Entries",
+          "Adding Expense Entries",
+          "User-Defined Category Management (Creation, Saving, Selection)",
+          "Amount Validation (Numeric Input Only)",
+          "Data Persistence (Saving Income/Expense Data and Categories)",
+          "Reporting and Visualization (Optional - Future Enhancement)",
+          "Filtering and Sorting Transactions (Optional - Future Enhancement)"
+        ],
+        "target_audience": "Individuals seeking to manage their personal finances and track their income and expenses.",
+        "ui_ux_guidelines": {
+          "design_system": "Employ a clean and modern design system (e.g., Material Design, Bootstrap, or a custom one) suitable for financial applications. Prioritize clarity and ease of use.",
+          "responsiveness": "Ensure the application is fully responsive and adapts to different screen sizes (desktops, tablets, mobile phones).",
+          "interactivity": "Incorporate interactive elements such as dropdown menus for category selection, clear error messages, and visual cues for income/expense differentiation.",
+          "data_visualization": "Consider future enhancements with charts and graphs to visualize spending patterns (e.g., pie charts showing expense distribution by category).",
+          "accessibility": "Adhere to accessibility guidelines (WCAG) to ensure usability for all users, including those with disabilities.",
+          "user_flow": "Design a simple and intuitive user flow for adding income and expenses, minimizing the number of steps required.",
+          "performance": "Optimize the application for fast loading times and a smooth user experience.",
+          "feedback": "Provide clear and immediate feedback to user actions, such as success messages after adding an entry or error messages for invalid input.",
+          "consistency": "Maintain consistent styling and behavior across all pages and components.",
+          "visual_cues": "Use visual cues (e.g., different colors, icons) to clearly differentiate between income and expense entries."
+        }
+      }
+    },
+    {
+        "type":"add_instruction",
+        "instruction":"When generating UI code or suggestions, prioritize a clean, intuitive, and responsive design. Ensure clear visual cues differentiate income and expenses. Implement robust input validation for the amount field. When generating backend code, focus on efficient data storage and retrieval for categories and transactions. Ensure data is stored securely.  Consider using appropriate data types for financial calculations to avoid precision issues."
+    }
+  ]
+}
+```

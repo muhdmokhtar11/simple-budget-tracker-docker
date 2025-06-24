@@ -1,0 +1,38 @@
+```jdl
+entity Category {
+  name String required maxlength(50)
+  description String maxlength(255)
+}
+
+entity Income {
+  amount BigDecimal required min(0)
+  description String maxlength(255)
+  date Instant required
+}
+
+entity Expense {
+  amount BigDecimal required max(0)
+  description String maxlength(255)
+  date Instant required
+}
+
+relationship ManyToOne {
+  Income{category(name) required} to Category
+}
+
+relationship ManyToOne {
+  Expense{category(name) required} to Category
+}
+
+relationship ManyToOne {
+  Income{user(login)} to User with builtInEntity
+}
+
+relationship ManyToOne {
+  Expense{user(login)} to User with builtInEntity
+}
+
+paginate Income, Expense with pagination
+service Income, Expense, Category with serviceClass
+dto Income, Expense, Category with mapstruct
+```
