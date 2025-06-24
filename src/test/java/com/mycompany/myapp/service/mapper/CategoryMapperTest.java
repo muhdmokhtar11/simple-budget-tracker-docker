@@ -5,6 +5,7 @@ import static com.mycompany.myapp.domain.CategoryTestSamples.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
 
 class CategoryMapperTest {
 
@@ -12,7 +13,7 @@ class CategoryMapperTest {
 
     @BeforeEach
     void setUp() {
-        categoryMapper = new CategoryMapperImpl();
+        categoryMapper = Mappers.getMapper(CategoryMapper.class);
     }
 
     @Test

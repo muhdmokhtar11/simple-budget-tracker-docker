@@ -5,6 +5,7 @@ import static com.mycompany.myapp.domain.ExpenseTestSamples.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
 
 class ExpenseMapperTest {
 
@@ -12,7 +13,7 @@ class ExpenseMapperTest {
 
     @BeforeEach
     void setUp() {
-        expenseMapper = new ExpenseMapperImpl();
+        expenseMapper = Mappers.getMapper(ExpenseMapper.class);
     }
 
     @Test

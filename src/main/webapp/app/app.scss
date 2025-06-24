@@ -2,14 +2,232 @@
 @import 'bootstrap-variables';
 // Import Bootstrap source files from node_modules
 @import 'bootstrap/scss/bootstrap';
+
+/* ==========================================================================
+Budget Tracker Global Styles
+========================================================================== */
+
 body {
-  background: #fafafa;
+  background: #f8f9fa;
   margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #2c3e50;
 }
 
 a {
-  color: #533f03;
-  font-weight: bold;
+  color: #3498db;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #2980b9;
+    text-decoration: none;
+  }
+}
+
+// Enhanced Card Styles
+.card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 12px 12px 0 0;
+    padding: 20px;
+    font-weight: 600;
+  }
+
+  .card-body {
+    padding: 25px;
+  }
+}
+
+// Enhanced Button Styles
+.btn {
+  border-radius: 8px;
+  font-weight: 500;
+  padding: 10px 20px;
+  transition: all 0.3s ease;
+  border: none;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &.btn-primary {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+
+    &:hover {
+      background: linear-gradient(135deg, #2980b9, #1f6391);
+    }
+  }
+
+  &.btn-success {
+    background: linear-gradient(135deg, #28a745, #20c997);
+
+    &:hover {
+      background: linear-gradient(135deg, #20c997, #17a2b8);
+    }
+  }
+
+  &.btn-danger {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+
+    &:hover {
+      background: linear-gradient(135deg, #c82333, #a02622);
+    }
+  }
+
+  &.btn-info {
+    background: linear-gradient(135deg, #17a2b8, #138496);
+
+    &:hover {
+      background: linear-gradient(135deg, #138496, #0f6674);
+    }
+  }
+}
+
+// Enhanced Table Styles
+.table {
+  th {
+    border-top: none;
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 600;
+    color: #495057;
+    padding: 15px 12px;
+    background-color: #f8f9fa;
+  }
+
+  td {
+    padding: 15px 12px;
+    vertical-align: middle;
+    border-top: 1px solid #f1f3f4;
+  }
+
+  tr {
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #f8f9fa;
+    }
+  }
+}
+
+// Enhanced Form Styles
+.form-control {
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  padding: 12px 15px;
+  transition: all 0.3s ease;
+
+  &:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+  }
+}
+
+.form-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 8px;
+}
+
+// Budget Tracker Specific Colors
+.text-income {
+  color: #28a745 !important;
+}
+
+.text-expense {
+  color: #dc3545 !important;
+}
+
+.text-balance {
+  color: #3498db !important;
+}
+
+.bg-income {
+  background: linear-gradient(135deg, #e8f5e8 0%, #c3e6c3 100%) !important;
+}
+
+.bg-expense {
+  background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%) !important;
+}
+
+.bg-balance {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%) !important;
+}
+
+// Enhanced Alert Styles
+.alert {
+  border: none;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+
+  &.alert-success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+    border-left: 4px solid #28a745;
+  }
+
+  &.alert-danger {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+  }
+
+  &.alert-warning {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    color: #856404;
+    border-left: 4px solid #ffc107;
+  }
+
+  &.alert-info {
+    background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+    color: #0c5460;
+    border-left: 4px solid #17a2b8;
+  }
+}
+
+// Loading Animation
+.spinner-border {
+  color: #3498db;
+}
+
+// Responsive Typography
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 1.25rem;
+}
+
+h3 {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
 }
 
 * {

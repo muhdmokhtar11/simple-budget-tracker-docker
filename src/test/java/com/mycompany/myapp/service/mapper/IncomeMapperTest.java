@@ -5,6 +5,7 @@ import static com.mycompany.myapp.domain.IncomeTestSamples.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
 
 class IncomeMapperTest {
 
@@ -12,7 +13,7 @@ class IncomeMapperTest {
 
     @BeforeEach
     void setUp() {
-        incomeMapper = new IncomeMapperImpl();
+        incomeMapper = Mappers.getMapper(IncomeMapper.class);
     }
 
     @Test
