@@ -1,4 +1,4 @@
-```jdl
+
 entity Category {
   name String required maxlength(50)
   description String maxlength(255)
@@ -35,4 +35,3 @@ relationship ManyToOne {
 paginate Income, Expense with pagination
 service Income, Expense, Category with serviceClass
 dto Income, Expense, Category with mapstruct
-```
