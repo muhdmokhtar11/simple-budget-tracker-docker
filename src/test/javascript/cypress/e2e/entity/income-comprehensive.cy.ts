@@ -1,5 +1,14 @@
-// Note: entity selectors are not used in this comprehensive test file
-// as it uses more specific data-testid selectors for better test maintainability
+import {
+  entityTableSelector,
+  entityDetailsButtonSelector,
+  entityDetailsBackButtonSelector,
+  entityCreateButtonSelector,
+  entityCreateSaveButtonSelector,
+  entityCreateCancelButtonSelector,
+  entityEditButtonSelector,
+  entityDeleteButtonSelector,
+  entityConfirmDeleteButtonSelector,
+} from '../../support/entity';
 
 describe('Income Comprehensive Tests', () => {
   const incomePageUrl = '/income';
@@ -341,10 +350,8 @@ describe('Income Comprehensive Tests', () => {
       cy.url().should('match', /\/income\/\d+\/edit$/);
 
       // Update form
-      cy.get('[data-testid="input-amount"]').clear();
-      cy.get('[data-testid="input-amount"]').type('2000.00');
-      cy.get('[data-testid="input-description"]').clear();
-      cy.get('[data-testid="input-description"]').type('Updated income');
+      cy.get('[data-testid="input-amount"]').clear().type('2000.00');
+      cy.get('[data-testid="input-description"]').clear().type('Updated income');
 
       // Save
       cy.get('[data-testid="btn-save"]').click();
