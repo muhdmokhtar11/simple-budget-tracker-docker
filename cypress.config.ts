@@ -11,11 +11,16 @@ export default defineConfig({
   viewportHeight: 720,
   retries: 2,
   scrollBehavior: 'center',
+  // Increase timeouts for coverage instrumentation
+  defaultCommandTimeout: 10000,
+  requestTimeout: 15000,
+  responseTimeout: 15000,
   env: {
     authenticationUrl: '/api/authenticate',
     jwtStorageName: 'jhi-authenticationToken',
     codeCoverage: {
       url: 'http://localhost:8080/__coverage__',
+      expectBackendCoverageOnly: false,
     },
   },
   e2e: {
