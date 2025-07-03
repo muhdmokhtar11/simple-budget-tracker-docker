@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "name": "Salary",
+    "description": "Salary and wages"
+  },
+  {
+    "id": 2,
+    "name": "Freelance",
+    "description": "Freelance work and contracts"
+  },
+  {
+    "id": 3,
+    "name": "Investment",
+    "description": "Investment returns and dividends"
+  },
+  {
+    "id": 4,
+    "name": "Other",
+    "description": "Other income sources"
+  },
+  {
+    "id": 5,
+    "name": "Rental",
+    "description": "Rental income from properties"
+  }
+]

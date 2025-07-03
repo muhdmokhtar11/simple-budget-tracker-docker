@@ -1,0 +1,18 @@
+{
+  "id": 1,
+  "amount": 2500.0,
+  "description": "Salary payment",
+  "date": "2024-01-15T10:30:00.000Z",
+  "category": {
+    "id": 1,
+    "name": "Salary",
+    "description": "Salary and wages"
+  },
+  "user": {
+    "id": 1,
+    "login": "admin",
+    "firstName": "Administrator",
+    "lastName": "Administrator",
+    "email": "admin@localhost"
+  }
+}

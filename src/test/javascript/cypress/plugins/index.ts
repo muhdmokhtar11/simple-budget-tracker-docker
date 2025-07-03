@@ -11,9 +11,14 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { lighthouse, pa11y, prepareAudit } from 'cypress-audit';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { lighthouse, pa11y, prepareAudit } = require('cypress-audit');
 
 export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) => {
+  // Code coverage setup
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  require('@cypress/code-coverage/task')(on, config);
+
   on('before:browser:launch', (browser, launchOptions) => {
     prepareAudit(launchOptions);
     if (browser.name === 'chrome' && browser.isHeadless) {
@@ -35,8 +40,9 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
   });
 
   on('task', {
-    lighthouse: lighthouse(async lighthouseReport => {
-      const { default: ReportGenerator } = await import('lighthouse/report/generator/report-generator');
+    lighthouse: lighthouse(lighthouseReport => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const ReportGenerator = require('lighthouse/report/generator/report-generator');
       if (!existsSync('target/cypress/')) {
         mkdirSync('target/cypress/', { recursive: true });
       }

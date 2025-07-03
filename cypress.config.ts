@@ -14,6 +14,9 @@ export default defineConfig({
   env: {
     authenticationUrl: '/api/authenticate',
     jwtStorageName: 'jhi-authenticationToken',
+    codeCoverage: {
+      url: 'http://localhost:8080/__coverage__',
+    },
   },
   e2e: {
     // We've imported your old cypress plugins here.

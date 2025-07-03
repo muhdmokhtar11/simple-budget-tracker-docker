@@ -83,26 +83,44 @@ export const IncomeUpdate = () => {
         };
 
   return (
-    <div>
+    <div data-testid="income-update-page">
       <Row className="justify-content-center">
-        <Col md="8">
-          <h2 id="simpleBudgetTrackerApp.income.home.createOrEditLabel" data-cy="IncomeCreateUpdateHeading">
-            Create or edit a Income
+        <Col md="8" data-testid="income-form-container">
+          <h2
+            id="simpleBudgetTrackerApp.income.home.createOrEditLabel"
+            data-cy="IncomeCreateUpdateHeading"
+            data-testid="heading-income-form"
+          >
+            {isNew ? 'Create a new Income' : 'Edit Income'}
           </h2>
         </Col>
       </Row>
       <Row className="justify-content-center">
         <Col md="8">
           {loading ? (
-            <p>Loading...</p>
+            <div className="d-flex justify-content-center p-4" data-testid="loading-income-form">
+              <span>Loading...</span>
+            </div>
           ) : (
-            <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
-              {!isNew ? <ValidatedField name="id" required readOnly id="income-id" label="ID" validate={{ required: true }} /> : null}
+            <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity} data-testid="income-form">
+              {!isNew ? (
+                <ValidatedField
+                  name="id"
+                  required
+                  readOnly
+                  id="income-id"
+                  label="ID"
+                  validate={{ required: true }}
+                  data-testid="input-id"
+                />
+              ) : null}
+
               <ValidatedField
                 label="Amount"
                 id="income-amount"
                 name="amount"
                 data-cy="amount"
+                data-testid="input-amount"
                 type="text"
                 validate={{
                   required: { value: true, message: 'This field is required.' },
@@ -110,58 +128,93 @@ export const IncomeUpdate = () => {
                   validate: v => isNumber(v) || 'This field should be a number.',
                 }}
               />
+
               <ValidatedField
                 label="Description"
                 id="income-description"
                 name="description"
                 data-cy="description"
+                data-testid="input-description"
                 type="text"
                 validate={{
                   maxLength: { value: 255, message: 'This field cannot be longer than 255 characters.' },
                 }}
               />
+
               <ValidatedField
                 label="Date"
                 id="income-date"
                 name="date"
                 data-cy="date"
+                data-testid="input-date"
                 type="datetime-local"
                 placeholder="YYYY-MM-DD HH:mm"
                 validate={{
                   required: { value: true, message: 'This field is required.' },
                 }}
               />
-              <ValidatedField id="income-category" name="category" data-cy="category" label="Category" type="select" required>
-                <option value="" key="0" />
+
+              <ValidatedField
+                id="income-category"
+                name="category"
+                data-cy="category"
+                data-testid="select-category"
+                label="Category"
+                type="select"
+                required
+              >
+                <option value="" key="0" data-testid="option-no-category">
+                  Select a category...
+                </option>
                 {categories
                   ? categories.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
+                      <option value={otherEntity.id} key={otherEntity.id} data-testid={`option-category-${otherEntity.id}`}>
                         {otherEntity.name}
                       </option>
                     ))
                   : null}
               </ValidatedField>
-              <FormText>This field is required.</FormText>
-              <ValidatedField id="income-user" name="user" data-cy="user" label="User" type="select">
-                <option value="" key="0" />
+              <FormText data-testid="category-help">This field is required.</FormText>
+
+              <ValidatedField id="income-user" name="user" data-cy="user" data-testid="select-user" label="User" type="select">
+                <option value="" key="0" data-testid="option-no-user">
+                  Select a user...
+                </option>
                 {users
                   ? users.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
+                      <option value={otherEntity.id} key={otherEntity.id} data-testid={`option-user-${otherEntity.id}`}>
                         {otherEntity.login}
                       </option>
                     ))
                   : null}
               </ValidatedField>
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/income" replace color="info">
-                <FontAwesomeIcon icon="arrow-left" />
-                &nbsp;
-                <span className="d-none d-md-inline">Back</span>
-              </Button>
-              &nbsp;
-              <Button color="primary" id="save-entity" data-cy="entityCreateSaveButton" type="submit" disabled={updating}>
-                <FontAwesomeIcon icon="save" />
-                &nbsp; Save
-              </Button>
+
+              <div className="d-flex gap-2 mt-3" data-testid="form-actions">
+                <Button
+                  tag={Link}
+                  id="cancel-save"
+                  data-cy="entityCreateCancelButton"
+                  data-testid="btn-cancel"
+                  to="/income"
+                  replace
+                  color="info"
+                >
+                  <FontAwesomeIcon icon="arrow-left" />
+                  &nbsp;
+                  <span className="d-none d-md-inline">Back</span>
+                </Button>
+                <Button
+                  color="primary"
+                  id="save-entity"
+                  data-cy="entityCreateSaveButton"
+                  data-testid="btn-save"
+                  type="submit"
+                  disabled={updating}
+                >
+                  <FontAwesomeIcon icon="save" />
+                  &nbsp; {updating ? 'Saving...' : 'Save'}
+                </Button>
+              </div>
             </ValidatedForm>
           )}
         </Col>

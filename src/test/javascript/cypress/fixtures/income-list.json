@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "amount": 2500.0,
+    "description": "Salary payment",
+    "date": "2024-01-15T10:30:00.000Z",
+    "category": {
+      "id": 1,
+      "name": "Salary"
+    },
+    "user": {
+      "id": 1,
+      "login": "admin"
+    }
+  },
+  {
+    "id": 2,
+    "amount": 500.0,
+    "description": "Freelance project",
+    "date": "2024-01-10T14:15:00.000Z",
+    "category": {
+      "id": 2,
+      "name": "Freelance"
+    },
+    "user": {
+      "id": 1,
+      "login": "admin"
+    }
+  },
+  {
+    "id": 3,
+    "amount": 100.0,
+    "description": "Investment dividend",
+    "date": "2024-01-05T09:00:00.000Z",
+    "category": {
+      "id": 3,
+      "name": "Investment"
+    },
+    "user": {
+      "id": 1,
+      "login": "admin"
+    }
+  },
+  {
+    "id": 4,
+    "amount": 75.5,
+    "description": "Gift money",
+    "date": "2024-01-01T12:00:00.000Z",
+    "category": {
+      "id": 4,
+      "name": "Other"
+    },
+    "user": {
+      "id": 1,
+      "login": "admin"
+    }
+  },
+  {
+    "id": 5,
+    "amount": 3000.0,
+    "description": "Bonus payment",
+    "date": "2023-12-25T16:30:00.000Z",
+    "category": {
+      "id": 1,
+      "name": "Salary"
+    },
+    "user": {
+      "id": 1,
+      "login": "admin"
+    }
+  }
+]

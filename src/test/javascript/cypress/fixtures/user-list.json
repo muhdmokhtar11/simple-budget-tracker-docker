@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "login": "admin",
+    "firstName": "Administrator",
+    "lastName": "Administrator",
+    "email": "admin@localhost",
+    "activated": true,
+    "langKey": "en",
+    "authorities": ["ROLE_ADMIN", "ROLE_USER"]
+  },
+  {
+    "id": 2,
+    "login": "user",
+    "firstName": "User",
+    "lastName": "User",
+    "email": "user@localhost",
+    "activated": true,
+    "langKey": "en",
+    "authorities": ["ROLE_USER"]
+  }
+]
