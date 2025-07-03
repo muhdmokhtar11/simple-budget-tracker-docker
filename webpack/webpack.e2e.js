@@ -48,23 +48,11 @@ module.exports = async options =>
             options: {
               esModules: true,
               produceSourceMap: true,
-              compact: false,
-              preserveComments: false,
-              // Add debug mode for CI environments
-              debug: process.env.CI || process.env.NODE_ENV === 'test',
             },
           },
           enforce: 'post',
           include: path.join(__dirname, '..', 'src/main/webapp/app'),
-          exclude: [
-            /\.(e2e|spec)\.ts$/,
-            /node_modules/,
-            /(ngfactory|ngstyle)\.js/,
-            // Exclude more files that might cause issues
-            /\.d\.ts$/,
-            /index\.tsx$/,
-            /bootstrap\.tsx$/,
-          ],
+          exclude: [/\.(e2e|spec)\.ts$/, /node_modules/, /(ngfactory|ngstyle)\.js/],
         },
       ],
     },
