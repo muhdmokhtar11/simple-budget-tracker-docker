@@ -311,10 +311,16 @@ describe('Income Comprehensive Tests', () => {
       cy.get('[data-testid="btn-create-income"]').click();
       cy.url().should('match', /\/income\/new$/);
 
+      // Wait for categories to load
+      cy.wait('@getCategories');
+
       // Fill form
       cy.get('[data-testid="input-amount"]').type('1000.50');
       cy.get('[data-testid="input-description"]').type('Test income');
       cy.get('[data-testid="input-date"]').type('2024-01-15T10:30');
+
+      // Select a category (required field)
+      cy.get('[data-testid="select-category"]').select('1');
 
       // Save
       cy.get('[data-testid="btn-save"]').click();
@@ -423,9 +429,15 @@ describe('Income Comprehensive Tests', () => {
     });
 
     it('should navigate back from create page', () => {
-      cy.visit(`${incomePageUrl}/new`);
+      // First visit the income page to create proper navigation history
+      cy.visit(incomePageUrl);
+      cy.wait('@getIncomes');
 
-      // Check if cancel button exists
+      // Then navigate to create page
+      cy.get('[data-testid="btn-create-income"]').click();
+      cy.url().should('match', /\/income\/new$/);
+
+      // Check if cancel button exists and use it
       cy.get('body').then($body => {
         if ($body.find('[data-testid="btn-cancel"]').length > 0) {
           cy.get('[data-testid="btn-cancel"]').click();
