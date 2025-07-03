@@ -36,12 +36,24 @@ jobs:
         run: npm run ci:e2e:package
       - name: 'E2E: Prepare'
         run: npm run ci:e2e:prepare
+      - name: 'E2E: Setup Coverage Directories'
+        run: |
+          mkdir -p target/cypress/.nyc_output
+          mkdir -p target/cypress/coverage
+          echo "Coverage directories created"
       - name: 'E2E: Run with Coverage'
-        run: npm run ci:e2e:run
+        run: npm run ci:e2e:coverage
         env:
           CYPRESS_ENABLE_RECORD: false
           CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+      - name: 'E2E: Debug Coverage Data'
+        run: |
+          echo "Checking for coverage data..."
+          ls -la target/cypress/ || echo "No target/cypress directory"
+          ls -la target/cypress/.nyc_output/ || echo "No .nyc_output directory"
+          find . -name "coverage*.json" -o -name "*.coverage" -o -name "__coverage__" 2>/dev/null || echo "No coverage files found"
+        if: always()
       - name: 'E2E: Generate Coverage Report'
         run: npx nyc report --reporter=html --reporter=text --reporter=lcov --reporter=json
         if: always()
