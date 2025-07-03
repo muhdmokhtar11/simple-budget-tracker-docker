@@ -1,0 +1,288 @@
+{
+  "stats": {
+    "suites": 5,
+    "tests": 7,
+    "passes": 7,
+    "pending": 0,
+    "failures": 0,
+    "start": "2025-07-03T06:55:30.396Z",
+    "end": "2025-07-03T06:55:39.553Z",
+    "duration": 9157,
+    "testsRegistered": 7,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "afa86f99-c25d-4886-8a8a-56df11dab31e",
+      "title": "",
+      "fullFile": "src/test/javascript/cypress/e2e/entity/income.cy.ts",
+      "file": "src/test/javascript/cypress/e2e/entity/income.cy.ts",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "c34a5e74-2d84-41d9-bcce-e3bb31c00ca6",
+          "title": "Income e2e test",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Incomes menu should load Incomes page",
+              "fullTitle": "Income e2e test Incomes menu should load Incomes page",
+              "timedOut": null,
+              "duration": 1133,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit('/');\ncy.clickOnEntityMenuItem('income');\ncy.wait('@entitiesRequest').then(({ response }) => {\n    if ((response === null || response === void 0 ? void 0 : response.body.length) === 0) {\n        cy.get(_support_entity__WEBPACK_IMPORTED_MODULE_0__.entityTableSelector).should('not.exist');\n    }\n    else {\n        cy.get(_support_entity__WEBPACK_IMPORTED_MODULE_0__.entityTableSelector).should('exist');\n    }\n});\ncy.getEntityHeading('Income').should('exist');\ncy.url().should('match', incomePageUrlPattern);",
+              "err": {},
+              "uuid": "5127d285-37d7-4b25-9f65-66ee87fe8300",
+              "parentUUID": "c34a5e74-2d84-41d9-bcce-e3bb31c00ca6",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [
+            {
+              "uuid": "6ba3fdb9-5be1-477d-a0e1-1ce91f39752d",
+              "title": "Income page",
+              "fullFile": "",
+              "file": "",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [],
+              "suites": [
+                {
+                  "uuid": "b0185898-235b-4b54-8c77-506c455dfe52",
+                  "title": "create button click",
+                  "fullFile": "",
+                  "file": "",
+                  "beforeHooks": [],
+                  "afterHooks": [],
+                  "tests": [
+                    {
+                      "title": "should load create Income page",
+                      "fullTitle": "Income e2e test Income page create button click should load create Income page",
+                      "timedOut": null,
+                      "duration": 757,
+                      "state": "passed",
+                      "speed": "fast",
+                      "pass": true,
+                      "fail": false,
+                      "pending": false,
+                      "context": null,
+                      "code": "cy.get(_support_entity__WEBPACK_IMPORTED_MODULE_0__.entityCreateButtonSelector).click();\ncy.url().should('match', new RegExp('/income/new$'));\ncy.getEntityCreateUpdateHeading('Income');\ncy.get(_support_entity__WEBPACK_IMPORTED_MODULE_0__.entityCreateSaveButtonSelector).should('exist');\ncy.get(_support_entity__WEBPACK_IMPORTED_MODULE_0__.entityCreateCancelButtonSelector).click();\ncy.wait('@entitiesRequest').then(({ response }) => {\n    expect(response === null || response === void 0 ? void 0 : response.statusCode).to.equal(200);\n});\ncy.url().should('match', incomePageUrlPattern);",
+                      "err": {},
+                      "uuid": "56064b6c-2d41-4e25-86a4-36dd5d8657e8",
+                      "parentUUID": "b0185898-235b-4b54-8c77-506c455dfe52",
+                      "isHook": false,
+                      "skipped": false
+                    }
+                  ],
+                  "suites": [],
+                  "passes": ["56064b6c-2d41-4e25-86a4-36dd5d8657e8"],
+                  "failures": [],
+                  "pending": [],
+                  "skipped": [],
+                  "duration": 757,
+                  "root": false,
+                  "rootEmpty": false,
+                  "_timeout": 2000
+                },
+                {
+                  "uuid": "8566f4df-1d08-4cf8-826a-493ff795e893",
+                  "title": "with existing value",
+                  "fullFile": "",
+                  "file": "",
+                  "beforeHooks": [],
+                  "afterHooks": [],
+                  "tests": [
+                    {
+                      "title": "detail button click should load details Income page",
+                      "fullTitle": "Income e2e test Income page with existing value detail button click should load details Income page",
+                      "timedOut": null,
+                      "duration": 883,
+                      "state": "passed",
+                      "speed": "fast",
+                      "pass": true,
+                      "fail": false,
+                      "pending": false,
+                      "context": null,
+                      "code": "cy.get(_support_entity__WEBPACK_IMPORTED_MODULE_0__.entityDetailsButtonSelector).first().click();\ncy.getEntityDetailsHeading('income');\ncy.get(_support_entity__WEBPACK_IMPORTED_MODULE_0__.entityDetailsBackButtonSelector).click();\ncy.wait('@entitiesRequest').then(({ response }) => {\n    expect(response === null || response === void 0 ? void 0 : response.statusCode).to.equal(200);\n});\ncy.url().should('match', incomePageUrlPattern);",
+                      "err": {},
+                      "uuid": "d522d44b-ae32-44bf-88de-4a73f23467e7",
+                      "parentUUID": "8566f4df-1d08-4cf8-826a-493ff795e893",
+                      "isHook": false,
+                      "skipped": false
+                    },
+                    {
+                      "title": "edit button click should load edit Income page and go back",
+                      "fullTitle": "Income e2e test Income page with existing value edit button click should load edit Income page and go back",
+                      "timedOut": null,
+                      "duration": 741,
+                      "state": "passed",
+                      "speed": "fast",
+                      "pass": true,
+                      "fail": false,
+                      "pending": false,
+                      "context": null,
+                      "code": "cy.get(_support_entity__WEBPACK_IMPORTED_MODULE_0__.entityEditButtonSelector).first().click();\ncy.getEntityCreateUpdateHeading('Income');\ncy.get(_support_entity__WEBPACK_IMPORTED_MODULE_0__.entityCreateSaveButtonSelector).should('exist');\ncy.get(_support_entity__WEBPACK_IMPORTED_MODULE_0__.entityCreateCancelButtonSelector).click();\ncy.wait('@entitiesRequest').then(({ response }) => {\n    expect(response === null || response === void 0 ? void 0 : response.statusCode).to.equal(200);\n});\ncy.url().should('match', incomePageUrlPattern);",
+                      "err": {},
+                      "uuid": "d9f948f7-5397-4637-82c3-134c0b4c3d97",
+                      "parentUUID": "8566f4df-1d08-4cf8-826a-493ff795e893",
+                      "isHook": false,
+                      "skipped": false
+                    },
+                    {
+                      "title": "edit button click should load edit Income page and save",
+                      "fullTitle": "Income e2e test Income page with existing value edit button click should load edit Income page and save",
+                      "timedOut": null,
+                      "duration": 853,
+                      "state": "passed",
+                      "speed": "fast",
+                      "pass": true,
+                      "fail": false,
+                      "pending": false,
+                      "context": null,
+                      "code": "cy.get(_support_entity__WEBPACK_IMPORTED_MODULE_0__.entityEditButtonSelector).first().click();\ncy.getEntityCreateUpdateHeading('Income');\ncy.get(_support_entity__WEBPACK_IMPORTED_MODULE_0__.entityCreateSaveButtonSelector).click();\ncy.wait('@entitiesRequest').then(({ response }) => {\n    expect(response === null || response === void 0 ? void 0 : response.statusCode).to.equal(200);\n});\ncy.url().should('match', incomePageUrlPattern);",
+                      "err": {},
+                      "uuid": "c0e264e8-a435-4c45-89bb-3d6b1a4425d2",
+                      "parentUUID": "8566f4df-1d08-4cf8-826a-493ff795e893",
+                      "isHook": false,
+                      "skipped": false
+                    },
+                    {
+                      "title": "last delete button click should delete instance of Income",
+                      "fullTitle": "Income e2e test Income page with existing value last delete button click should delete instance of Income",
+                      "timedOut": null,
+                      "duration": 1330,
+                      "state": "passed",
+                      "speed": "fast",
+                      "pass": true,
+                      "fail": false,
+                      "pending": false,
+                      "context": null,
+                      "code": "cy.intercept('GET', '/api/incomes/*').as('dialogDeleteRequest');\ncy.get(_support_entity__WEBPACK_IMPORTED_MODULE_0__.entityDeleteButtonSelector).last().click();\ncy.wait('@dialogDeleteRequest');\ncy.getEntityDeleteDialogHeading('income').should('exist');\ncy.get(_support_entity__WEBPACK_IMPORTED_MODULE_0__.entityConfirmDeleteButtonSelector).click();\ncy.wait('@deleteEntityRequest').then(({ response }) => {\n    expect(response === null || response === void 0 ? void 0 : response.statusCode).to.equal(204);\n});\ncy.wait('@entitiesRequest').then(({ response }) => {\n    expect(response === null || response === void 0 ? void 0 : response.statusCode).to.equal(200);\n});\ncy.url().should('match', incomePageUrlPattern);\nincome = undefined;",
+                      "err": {},
+                      "uuid": "b4ca9968-0d33-4b22-ac6e-69729d5faef6",
+                      "parentUUID": "8566f4df-1d08-4cf8-826a-493ff795e893",
+                      "isHook": false,
+                      "skipped": false
+                    }
+                  ],
+                  "suites": [],
+                  "passes": [
+                    "d522d44b-ae32-44bf-88de-4a73f23467e7",
+                    "d9f948f7-5397-4637-82c3-134c0b4c3d97",
+                    "c0e264e8-a435-4c45-89bb-3d6b1a4425d2",
+                    "b4ca9968-0d33-4b22-ac6e-69729d5faef6"
+                  ],
+                  "failures": [],
+                  "pending": [],
+                  "skipped": [],
+                  "duration": 3807,
+                  "root": false,
+                  "rootEmpty": false,
+                  "_timeout": 2000
+                }
+              ],
+              "passes": [],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 0,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 2000
+            },
+            {
+              "uuid": "aa893c8f-69b7-4a1c-a8f9-dbc7f640709d",
+              "title": "new Income page",
+              "fullFile": "",
+              "file": "",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should create an instance of Income",
+                  "fullTitle": "Income e2e test new Income page should create an instance of Income",
+                  "timedOut": null,
+                  "duration": 1740,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "cy.get(`[data-cy=\"amount\"]`).type('6441.06');\ncy.get(`[data-cy=\"amount\"]`).should('have.value', '6441.06');\ncy.get(`[data-cy=\"description\"]`).type('platypus gee');\ncy.get(`[data-cy=\"description\"]`).should('have.value', 'platypus gee');\ncy.get(`[data-cy=\"date\"]`).type('2025-06-23T21:12');\ncy.get(`[data-cy=\"date\"]`).blur();\ncy.get(`[data-cy=\"date\"]`).should('have.value', '2025-06-23T21:12');\ncy.get(`[data-cy=\"category\"]`).select(1);\ncy.get(_support_entity__WEBPACK_IMPORTED_MODULE_0__.entityCreateSaveButtonSelector).click();\ncy.wait('@postEntityRequest').then(({ response }) => {\n    expect(response === null || response === void 0 ? void 0 : response.statusCode).to.equal(201);\n    income = response.body;\n});\ncy.wait('@entitiesRequest').then(({ response }) => {\n    expect(response === null || response === void 0 ? void 0 : response.statusCode).to.equal(200);\n});\ncy.url().should('match', incomePageUrlPattern);",
+                  "err": {},
+                  "uuid": "b31f782e-1d4b-4d60-ac25-e48228473737",
+                  "parentUUID": "aa893c8f-69b7-4a1c-a8f9-dbc7f640709d",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": ["b31f782e-1d4b-4d60-ac25-e48228473737"],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 1740,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 2000
+            }
+          ],
+          "passes": ["5127d285-37d7-4b25-9f65-66ee87fe8300"],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 1133,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.3"
+    },
+    "marge": {
+      "options": null,
+      "version": "6.2.0"
+    }
+  }
+}

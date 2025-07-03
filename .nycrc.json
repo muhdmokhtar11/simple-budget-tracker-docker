@@ -1,0 +1,18 @@
+{
+  "extends": "@istanbuljs/nyc-config-typescript",
+  "all": true,
+  "include": ["src/main/webapp/app/**/*.{js,jsx,ts,tsx}"],
+  "exclude": [
+    "src/main/webapp/app/**/*.spec.{js,jsx,ts,tsx}",
+    "src/main/webapp/app/**/*.test.{js,jsx,ts,tsx}",
+    "src/main/webapp/app/setup-tests.ts",
+    "src/main/webapp/app/config/**/*",
+    "src/main/webapp/app/index.tsx",
+    "src/test/**/*",
+    "node_modules/**/*"
+  ],
+  "reporter": ["html", "text", "json", "lcov"],
+  "report-dir": "target/cypress/coverage",
+  "cache": false,
+  "temp-dir": "target/cypress/.nyc_output"
+}

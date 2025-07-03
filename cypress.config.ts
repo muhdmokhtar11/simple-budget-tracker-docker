@@ -26,5 +26,20 @@ export default defineConfig({
     specPattern: 'src/test/javascript/cypress/e2e/**/*.cy.ts',
     supportFile: 'src/test/javascript/cypress/support/index.ts',
     experimentalRunAllSpecs: true,
+    env: {
+      authenticationUrl: '/api/authenticate',
+      jwtStorageName: 'jhi-authenticationToken',
+      codeCoverage: {
+        exclude: [
+          'src/test/**/*',
+          'src/main/webapp/app/**/*.spec.ts',
+          'src/main/webapp/app/**/*.test.ts',
+          'src/main/webapp/app/**/*.spec.tsx',
+          'src/main/webapp/app/**/*.test.tsx',
+          'src/main/webapp/app/index.tsx',
+          'src/main/webapp/app/setup-tests.ts',
+        ],
+      },
+    },
   },
 });

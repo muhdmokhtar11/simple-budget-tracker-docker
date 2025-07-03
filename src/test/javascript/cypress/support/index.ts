@@ -18,3 +18,11 @@ import './commands';
 import './navbar';
 import './entity';
 import './management';
+
+// Import coverage-specific auth when in test mode
+if (Cypress.env('NODE_ENV') === 'test') {
+  import('./coverage-auth');
+}
+
+// Import code coverage support
+import '@cypress/code-coverage/support';
