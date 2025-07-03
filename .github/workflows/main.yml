@@ -34,11 +34,31 @@ jobs:
         run: npm run ci:e2e:package
       - name: 'E2E: Prepare'
         run: npm run ci:e2e:prepare
-      - name: 'E2E: Run'
+      - name: 'E2E: Build with Coverage'
+        run: npm run webapp:build:e2e
+      - name: 'E2E: Run with Coverage'
         run: npm run ci:e2e:run
         env:
           CYPRESS_ENABLE_RECORD: false
           CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+      - name: 'E2E: Generate Coverage Report'
+        run: npx nyc report --reporter=html --reporter=text --reporter=lcov --reporter=json
+        if: always()
+      - name: 'E2E: Upload Coverage Reports'
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cypress-coverage-report
+          path: target/cypress/coverage/
+          retention-days: 30
+      - name: 'E2E: Upload Coverage to Codecov'
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          files: target/cypress/coverage/lcov.info
+          flags: cypress-e2e
+          name: cypress-coverage
+          fail_ci_if_error: false
       - name: 'E2E: Teardown'
         run: npm run ci:e2e:teardown
