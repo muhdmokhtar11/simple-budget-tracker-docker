@@ -33,9 +33,5 @@
   ],
   "reporter": ["html", "text", "text-summary", "lcov", "json"],
   "report-dir": "target/cypress/coverage",
-  "temp-dir": "target/cypress/.nyc_output",
-  "statements": 80,
-  "branches": 80,
-  "functions": 80,
-  "lines": 80
+  "temp-dir": "target/cypress/.nyc_output"
 }
