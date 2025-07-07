@@ -2,13 +2,7 @@
   "extends": "@istanbuljs/nyc-config-typescript",
   "all": true,
   "include": ["src/main/webapp/app/**/*.{js,ts,tsx}"],
-  "exclude": ["**/*.spec.ts", "**/*.test.ts", "**/*.d.ts"],
   "reporter": ["html", "text", "text-summary", "lcov", "json"],
   "report-dir": "target/cypress/coverage",
-  "temp-dir": "target/cypress/.nyc_output",
-  "clean": true,
-  "skip-full": false,
-  "sourceMap": true,
-  "instrument": true,
-  "require": ["ts-node/register"]
+  "temp-dir": "target/cypress/.nyc_output"
 }

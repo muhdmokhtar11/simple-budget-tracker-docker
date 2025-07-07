@@ -40,7 +40,7 @@ module.exports = async options =>
             },
           ],
         },
-        // Updated Istanbul instrumenter for code coverage
+        // Add Istanbul instrumenter for code coverage
         {
           test: /\.(js|ts|tsx)$/,
           use: {
@@ -48,12 +48,11 @@ module.exports = async options =>
             options: {
               esModules: true,
               produceSourceMap: true,
-              compact: false,
             },
           },
           enforce: 'post',
           include: path.join(__dirname, '..', 'src/main/webapp/app'),
-          exclude: [/node_modules/],
+          exclude: [/\.(e2e|spec)\.ts$/, /node_modules/, /(ngfactory|ngstyle)\.js/],
         },
       ],
     },
