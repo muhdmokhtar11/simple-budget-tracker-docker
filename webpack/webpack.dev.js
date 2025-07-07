@@ -42,6 +42,20 @@ module.exports = async options =>
             },
           ],
         },
+        // Add coverage instrumentation when running in test environment
+        ...(process.env.NODE_ENV === 'test'
+          ? [
+              {
+                test: /\.(js|ts|tsx)$/,
+                exclude: [/node_modules/, /test\.tsx?$/],
+                use: {
+                  loader: '@jsdevtools/coverage-istanbul-loader',
+                  options: { esModules: true },
+                },
+                enforce: 'post',
+              },
+            ]
+          : []),
       ],
     },
     devServer: {
