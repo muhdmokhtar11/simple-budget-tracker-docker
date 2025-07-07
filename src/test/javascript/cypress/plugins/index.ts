@@ -11,11 +11,13 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
+// @ts-expect-error cypress-audit lacks proper TypeScript declarations
 import { lighthouse, pa11y, prepareAudit } from 'cypress-audit';
+import codeCoverage from '@cypress/code-coverage/task';
 
 export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) => {
   // Register coverage plugin
-  require('@cypress/code-coverage/task')(on, config);
+  codeCoverage(on, config);
 
   on('before:browser:launch', (browser, launchOptions) => {
     prepareAudit(launchOptions);
@@ -39,7 +41,7 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
 
   on('task', {
     lighthouse: lighthouse(async lighthouseReport => {
-      const { default: ReportGenerator } = await import('lighthouse/report/generator/report-generator');
+      const { ReportGenerator } = await import('lighthouse/report/generator/report-generator.js');
       if (!existsSync('target/cypress/')) {
         mkdirSync('target/cypress/', { recursive: true });
       }
