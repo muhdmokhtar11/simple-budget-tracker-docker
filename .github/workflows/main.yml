@@ -11,7 +11,6 @@ jobs:
       SPRING_OUTPUT_ANSI_ENABLED: DETECT
       SPRING_JPA_SHOW_SQL: false
       JHI_DISABLE_WEBPACK_LOGS: true
-      NODE_ENV: test # Enable coverage instrumentation
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -21,30 +20,20 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: 17
-
-      # Cache dependencies
-      - name: Cache node modules
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
       - name: Install Node.js packages
         run: npm install
-
       - name: Run backend test
         run: |
           chmod +x mvnw
           npm run ci:backend:test
-
       - name: Run frontend test
         run: npm run ci:frontend:test
 
       # Build frontend with coverage instrumentation
       - name: Build frontend with coverage
         run: npm run webapp:build:e2e
+        env:
+          NODE_ENV: test
 
       # Package application with instrumented code
       - name: Package for E2E tests
@@ -53,44 +42,35 @@ jobs:
       - name: 'E2E: Prepare'
         run: npm run ci:e2e:prepare
 
-      # Run E2E tests with coverage
-      - name: 'E2E: Run with coverage'
-        run: npm run e2e:cypress:coverage
+      - name: 'E2E: Run'
+        run: npm run ci:e2e:run
         env:
           CYPRESS_ENABLE_RECORD: false
           CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
 
-      # Merge all coverage reports
-      - name: Merge coverage reports
+      # Generate and upload coverage report
+      - name: Generate coverage report
         if: always()
         run: |
-          mkdir -p .nyc_output
-          npx nyc merge .nyc_output coverage/cypress/.nyc_output/out.json
-          npx nyc report --reporter=lcov --reporter=text-summary --report-dir coverage/merged
+          npx nyc report --reporter=lcov --reporter=text-summary
 
-      # Upload to Codecov
       - name: Upload coverage to Codecov
         if: always()
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          directory: coverage/merged
-          flags: e2e,frontend
+          files: ./coverage/lcov.info
+          flags: e2e
           name: codecov-umbrella
           fail_ci_if_error: false
-          verbose: true
 
-      # Upload coverage as artifact
       - name: Upload coverage artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: |
-            coverage/merged
-            coverage/cypress
-          retention-days: 14
+          path: coverage/
 
       - name: 'E2E: Teardown'
         if: always()
