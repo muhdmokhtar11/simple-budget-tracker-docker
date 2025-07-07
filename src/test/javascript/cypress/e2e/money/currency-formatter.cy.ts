@@ -10,7 +10,8 @@ declare global {
 describe('Currency Formatter Tests', () => {
   beforeEach(() => {
     cy.visit('/expense');
-    cy.wait(1000); // Wait for data to load
+    // Wait for the page to be ready by checking for a specific element
+    cy.get('[data-testid="currency-value"]').should('exist');
   });
 
   it('should format USD currency values correctly', () => {
