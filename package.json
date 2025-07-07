@@ -38,7 +38,7 @@
     "e2e:cypress": "cypress run --e2e --browser chrome",
     "e2e:cypress:audits": "cypress run --e2e --browser chrome --config-file cypress-audits.config.js",
     "e2e:cypress:audits:headless": "npm run e2e:cypress -- --config-file cypress-audits.config.js",
-    "e2e:cypress:coverage": "cypress run --e2e --browser chrome",
+    "e2e:cypress:coverage": "cross-env NODE_ENV=test cypress run --e2e --browser chrome",
     "e2e:cypress:coverage:open": "cypress open --e2e",
     "e2e:cypress:headed": "npm run e2e:cypress -- --headed",
     "e2e:cypress:record": "npm run e2e:cypress -- --record",

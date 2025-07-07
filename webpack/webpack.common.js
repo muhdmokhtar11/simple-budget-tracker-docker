@@ -9,7 +9,7 @@ const utils = require('./utils.js');
 const environment = require('./environment');
 
 const getTsLoaderRule = () => {
-  return [
+  const loaders = [
     {
       loader: 'thread-loader',
       options: {
@@ -27,6 +27,18 @@ const getTsLoaderRule = () => {
       },
     },
   ];
+
+  if (process.env.NODE_ENV === 'test') {
+    loaders.push({
+      loader: '@jsdevtools/coverage-istanbul-loader',
+      options: {
+        esModules: true,
+        produceSourceMap: true,
+      },
+    });
+  }
+
+  return loaders;
 };
 
 module.exports = async options => {
