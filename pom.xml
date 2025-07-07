@@ -26,6 +26,7 @@
         <java.version>17</java.version>
         <node.version>v22.15.0</node.version>
         <npm.version>11.3.0</npm.version>
+        <skip.npm>false</skip.npm>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
@@ -674,10 +675,38 @@
                     <artifactId>frontend-maven-plugin</artifactId>
                     <version>${frontend-maven-plugin.version}</version>
                     <configuration>
+                        <skip>${skip.npm}</skip>
                         <installDirectory>target</installDirectory>
                         <nodeVersion>${node.version}</nodeVersion>
                         <npmVersion>${npm.version}</npmVersion>
                     </configuration>
+                    <executions>
+                        <execution>
+                            <id>install-node-and-npm</id>
+                            <goals>
+                                <goal>install-node-and-npm</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>npm-install</id>
+                            <goals>
+                                <goal>npm</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>webapp-build-prod</id>
+                            <goals>
+                                <goal>npm</goal>
+                            </goals>
+                            <phase>generate-resources</phase>
+                            <configuration>
+                                <arguments>run webapp:build:prod</arguments>
+                                <environmentVariables>
+                                    <APP_VERSION>${project.version}</APP_VERSION>
+                                </environmentVariables>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>com.google.cloud.tools</groupId>
@@ -1242,4 +1271,15 @@
             </build>
         </profile>
     </profiles>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id/>
+            <url/>
+        </snapshotRepository>
+        <repository>
+            <id/>
+            <url/>
+        </repository>
+    </distributionManagement>
 </project>
