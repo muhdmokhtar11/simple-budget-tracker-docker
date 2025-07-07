@@ -14,6 +14,9 @@ import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { lighthouse, pa11y, prepareAudit } from 'cypress-audit';
 
 export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) => {
+  // Initialize code coverage plugin
+  require('@cypress/code-coverage/task')(on, config);
+
   on('before:browser:launch', (browser, launchOptions) => {
     prepareAudit(launchOptions);
     if (browser.name === 'chrome' && browser.isHeadless) {
@@ -44,5 +47,6 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
     }),
     pa11y: pa11y(),
   });
+
   return config;
 };

@@ -18,3 +18,6 @@ import './commands';
 import './navbar';
 import './entity';
 import './management';
+
+// Import code coverage support
+import '@cypress/code-coverage/support';

@@ -8,6 +8,7 @@ import { APP_DATE_FORMAT } from 'app/config/constants';
 import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
+import { CurrencyFormatter } from 'app/shared/money/currency-formatter';
 
 import { getEntities } from './expense.reducer';
 
@@ -137,7 +138,9 @@ export const Expense = () => {
                       {expense.id}
                     </Button>
                   </td>
-                  <td>{expense.amount}</td>
+                  <td>
+                    <CurrencyFormatter amount={expense.amount} />
+                  </td>
                   <td>{expense.description}</td>
                   <td>{expense.date ? <TextFormat type="date" value={expense.date} format={APP_DATE_FORMAT} /> : null}</td>
                   <td>{expense.category ? <Link to={`/category/${expense.category.id}`}>{expense.category.name}</Link> : ''}</td>
