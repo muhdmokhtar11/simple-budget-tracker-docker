@@ -15,7 +15,8 @@ export default defineConfig({
     authenticationUrl: '/api/authenticate',
     jwtStorageName: 'jhi-authenticationToken',
     codeCoverage: {
-      url: 'http://localhost:8080/__coverage__',
+      url: '/__coverage__',
+      exclude: ['cypress/**/*.*'],
     },
   },
   e2e: {
