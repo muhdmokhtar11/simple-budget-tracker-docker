@@ -37,26 +37,15 @@ jobs:
         run: npm run ci:e2e:package
       - name: Start Backend Services
         run: |
-          # Start MySQL and wait for it to be ready
           npm run ci:e2e:prepare
-          echo "Waiting for MySQL to be ready..."
-          timeout 60s bash -c 'until docker exec $(docker ps -q -f "name=mysql") mysql -uroot -e "SELECT 1" >/dev/null 2>&1; do sleep 2; done'
-
-          # Start the backend server
-          echo "Starting backend server..."
           npm run ci:e2e:server:start &
           echo "Waiting for backend server to start..."
-          npm run ci:server:await || {
-            echo "Backend server failed to start. Checking logs..."
-            docker logs $(docker ps -q -f "name=mysql")
-            exit 1
-          }
+          npm run ci:server:await
         env:
           SPRING_PROFILES_ACTIVE: e2e
           SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/simple_budget_tracker?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
           SPRING_DATASOURCE_USERNAME: root
           SPRING_DATASOURCE_PASSWORD: root
-          SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQL8Dialect
       - name: Run E2E Tests with Coverage
         run: npm run e2e:cypress:coverage
         env:
