@@ -22,9 +22,9 @@
     "ci:e2e:prepare": "npm run ci:e2e:prepare:docker",
     "ci:e2e:prepare:docker": "npm run services:up --if-present && docker ps -a",
     "ci:e2e:report": "nyc report --reporter=html --reporter=text",
-    "ci:e2e:run": "npm run e2e:cypress:coverage",
+    "ci:e2e:run": "npm run ci:server:await && npm run e2e:cypress:coverage",
     "preci:e2e:server:start": "npm run services:db:await --if-present && npm run services:others:await --if-present",
-    "ci:e2e:server:start": "java -jar target/e2e.$npm_package_config_packaging --spring.profiles.active=e2e,$npm_package_config_default_environment -Dlogging.level.ROOT=OFF -Dlogging.level.tech.jhipster=OFF -Dlogging.level.com.mycompany.myapp=OFF -Dlogging.level.org.springframework=OFF -Dlogging.level.org.springframework.web=OFF -Dlogging.level.org.springframework.security=OFF --logging.level.org.springframework.web=ERROR",
+    "ci:e2e:server:start": "java -jar target/e2e.jar --spring.profiles.active=e2e,$npm_package_config_default_environment -Dlogging.level.ROOT=OFF -Dlogging.level.tech.jhipster=OFF -Dlogging.level.com.mycompany.myapp=OFF -Dlogging.level.org.springframework=OFF -Dlogging.level.org.springframework.web=OFF -Dlogging.level.org.springframework.security=OFF --logging.level.org.springframework.web=ERROR",
     "ci:e2e:teardown": "npm run ci:e2e:teardown:docker --if-present",
     "ci:e2e:teardown:docker": "docker compose -f src/main/docker/services.yml down -v && docker ps -a",
     "ci:frontend:test": "npm run webapp:build:$npm_package_config_default_environment && npm run test-ci",
@@ -83,12 +83,18 @@
     "webpack-dev-server": "webpack serve"
   },
   "config": {
-    "backend_port": 8080,
-    "default_environment": "prod",
-    "packaging": "jar"
+    "backend_port": "8080",
+    "default_environment": "prod"
   },
   "overrides": {
-    "browser-sync": "3.0.4"
+    "cypress-audit": {
+      "lighthouse": "^10.0.0",
+      "pa11y": "^7.0.0"
+    },
+    "sourcemap-istanbul-instrumenter-loader": {
+      "loader-utils": "^2.0.0",
+      "json5": "^2.0.0"
+    }
   },
   "dependencies": {
     "@eslint/js": "9.26.0",

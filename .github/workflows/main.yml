@@ -1,65 +1,77 @@
-name: Application CI
-on: [push, pull_request]
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
 jobs:
-  pipeline:
-    name: simpleBudgetTracker pipeline
+  build-and-test:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.pull_request.title, '[skip ci]') && !contains(github.event.pull_request.title, '[ci skip]')"
-    timeout-minutes: 40
-    env:
-      NODE_VERSION: 22.15.0
-      SPRING_OUTPUT_ANSI_ENABLED: DETECT
-      SPRING_JPA_SHOW_SQL: false
-      JHI_DISABLE_WEBPACK_LOGS: true
-      NODE_ENV: development
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: simple_budget_tracker
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 22.15.0
+          node-version: '22.15.0'
           cache: 'npm'
-      - uses: actions/setup-java@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
         with:
+          java-version: '17'
           distribution: 'temurin'
-          java-version: 17
           cache: 'maven'
-      - name: Install Node.js packages
-        run: npm install
-      - name: Run backend test
-        run: |
-          chmod +x mvnw
-          npm run ci:backend:test
-      - name: Run frontend test
-        run: npm run ci:frontend:test
-      - name: Analyze code with SonarQube
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          if [ ! -z "$SONAR_TOKEN" ]; then
-              ./mvnw -ntp initialize sonar:sonar -Dsonar.host.url=
-          else
-              echo No SONAR_TOKEN, skipping...
-          fi
+
+      - name: Install Dependencies
+        run: npm ci
+
       - name: Build Frontend
         run: npm run webapp:build:dev
+        env:
+          NODE_ENV: development
+
       - name: Package Application
         run: npm run ci:e2e:package
+
       - name: Start Backend Services
-        run: npm run ci:e2e:prepare
+        run: |
+          npm run ci:e2e:prepare
+          npm run ci:e2e:server:start &
+          echo "Waiting for backend server to start..."
+          npm run ci:server:await
+        env:
+          SPRING_PROFILES_ACTIVE: e2e
+          SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/simple_budget_tracker?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+          SPRING_DATASOURCE_USERNAME: root
+          SPRING_DATASOURCE_PASSWORD: root
+
       - name: Run E2E Tests with Coverage
-        run: npm run ci:e2e:run
+        run: npm run e2e:cypress:coverage
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          CYPRESS_RETRIES: 2
+
       - name: Generate Coverage Report
         if: always()
         run: npm run ci:e2e:report
+
       - name: Upload Coverage Reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: target/cypress/coverage/
-      - name: 'E2E: Teardown'
-        if: always()
-        run: npm run ci:e2e:teardown
