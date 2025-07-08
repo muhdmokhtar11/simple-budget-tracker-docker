@@ -80,6 +80,7 @@
         <spring.profiles.active>dev</spring.profiles.active>
         <springdoc-openapi-starter-webmvc-api.version>2.8.8</springdoc-openapi-starter-webmvc-api.version>
         <testng.version>7.11.0</testng.version>
+        <skip.npm>false</skip.npm>
     </properties>
 
     <dependencyManagement>
@@ -677,6 +678,7 @@
                         <installDirectory>target</installDirectory>
                         <nodeVersion>${node.version}</nodeVersion>
                         <npmVersion>${npm.version}</npmVersion>
+                        <skip>${skip.npm}</skip>
                     </configuration>
                 </plugin>
                 <plugin>
