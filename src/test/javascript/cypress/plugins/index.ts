@@ -15,7 +15,7 @@ import { lighthouse, pa11y, prepareAudit } from 'cypress-audit';
 import codeCoverage from '@cypress/code-coverage/task';
 
 export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) => {
-  // Register coverage plugin
+  // Initialize code coverage plugin
   codeCoverage(on, config);
 
   on('before:browser:launch', (browser, launchOptions) => {
@@ -26,8 +26,9 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
     }
   });
 
-  // Allows logging with cy.task('log', 'message') or cy.task('table', object)
+  // Register code coverage tasks
   on('task', {
+    ...codeCoverage,
     log(message) {
       console.log(message);
       return null;
@@ -36,9 +37,6 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       console.table(message);
       return null;
     },
-  });
-
-  on('task', {
     lighthouse: lighthouse(async lighthouseReport => {
       const { default: ReportGenerator } = await import('lighthouse/report/generator/report-generator');
       if (!existsSync('target/cypress/')) {
@@ -48,5 +46,6 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
     }),
     pa11y: pa11y(),
   });
+
   return config;
 };

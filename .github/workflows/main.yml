@@ -11,6 +11,7 @@ jobs:
       SPRING_OUTPUT_ANSI_ENABLED: DETECT
       SPRING_JPA_SHOW_SQL: false
       JHI_DISABLE_WEBPACK_LOGS: true
+      NODE_ENV: coverage
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -42,7 +43,7 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CYPRESS_COVERAGE: true
       - name: 'E2E: Generate Coverage Report'
-        run: npm run nyc report --reporter=html
+        run: npm run e2e:cypress:coverage:report
       - name: 'Upload Coverage Report'
         uses: actions/upload-artifact@v4
         with:
