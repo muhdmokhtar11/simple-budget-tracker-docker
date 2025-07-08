@@ -9,7 +9,7 @@ const utils = require('./utils.js');
 const environment = require('./environment');
 
 const getTsLoaderRule = () => {
-  const baseRule = [
+  return [
     {
       loader: 'thread-loader',
       options: {
@@ -27,16 +27,6 @@ const getTsLoaderRule = () => {
       },
     },
   ];
-
-  // Add coverage instrumentation if enabled
-  if (process.env.CYPRESS_COVERAGE === 'true') {
-    baseRule.unshift({
-      loader: '@jsdevtools/coverage-istanbul-loader',
-      options: { esModules: true },
-    });
-  }
-
-  return baseRule;
 };
 
 module.exports = async options => {
