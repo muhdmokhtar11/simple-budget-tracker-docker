@@ -21,7 +21,7 @@ jobs:
           distribution: 'temurin'
           java-version: 17
       - name: Install Node.js packages
-        run: npm ci
+        run: npm install
       - name: Run backend test
         run: |
           chmod +x mvnw
@@ -34,32 +34,11 @@ jobs:
         run: npm run ci:e2e:package
       - name: 'E2E: Prepare'
         run: npm run ci:e2e:prepare
-      - name: Install serve
-        run: npm install -g serve
-      - name: Instrument frontend code
-        run: npx nyc instrument ./src ./instrumented --compact=false
-      - name: Serve instrumented code
-        run: serve ./instrumented -p 3000 &
-      - name: Wait for server
-        run: sleep 10
-      - name: 'E2E: Run with coverage'
+      - name: 'E2E: Run'
         run: npm run ci:e2e:run
         env:
           CYPRESS_ENABLE_RECORD: false
           CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          CYPRESS_BASE_URL: http://localhost:3000
-      - name: Generate coverage report
-        if: always()
-        run: |
-          npx nyc report --reporter=html
-          npx nyc report --reporter=text-summary
-      - name: Upload coverage report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: target/cypress/coverage
       - name: 'E2E: Teardown'
-        if: always()
         run: npm run ci:e2e:teardown
