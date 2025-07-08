@@ -1,0 +1,171 @@
+CYPRESS TEST COVERAGE SETUP GUIDE
+================================
+
+OVERVIEW
+--------
+This guide explains how Cypress code coverage is configured in your JHipster React application, including local development and CI/CD integration.
+
+LOCAL DEVELOPMENT SETUP
+----------------------
+
+1. DEPENDENCIES
+   Required packages in package.json:
+   - @cypress/code-coverage: ^3.14.5
+   - @istanbuljs/nyc-config-typescript: ^1.0.2
+   - @jsdevtools/coverage-istanbul-loader: ^3.0.5
+   - nyc: ^15.1.0
+   - babel-plugin-istanbul: ^6.1.1
+
+   To install dependencies:
+   $ npm install
+
+2. CONFIGURATION FILES
+
+   a) NYC Configuration (.nycrc.json)
+      {
+        "extends": "@istanbuljs/nyc-config-typescript",
+        "all": true,
+        "include": ["src/main/webapp/app/**/*.{js,ts,tsx}"],
+        "reporter": ["html", "lcov", "json", "text"],
+        "report-dir": "target/cypress/coverage",
+        "temp-dir": "target/cypress/.nyc_output"
+      }
+
+   b) Cypress Configuration (cypress.config.ts)
+      env: {
+        authenticationUrl: '/api/authenticate',
+        jwtStorageName: 'jhi-authenticationToken',
+        coverage: true,
+        codeCoverage: {
+          url: 'http://localhost:8080/__coverage__',
+        },
+      }
+
+   c) Cypress Support File (src/test/javascript/cypress/support/index.ts)
+      import '@cypress/code-coverage/support';
+
+   d) Cypress Plugins File (src/test/javascript/cypress/plugins/index.ts)
+      import { existsSync, mkdirSync, writeFileSync } from 'fs';
+      import { lighthouse, pa11y, prepareAudit } from 'cypress-audit';
+      import codeCoverage from '@cypress/code-coverage/task';
+
+      export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) => {
+        // Register coverage plugin
+        codeCoverage(on, config);
+        // ... rest of the configuration
+      };
+
+RUNNING TESTS WITH COVERAGE
+--------------------------
+
+1. LOCAL DEVELOPMENT COMMANDS
+   
+   Run tests headlessly with coverage:
+   $ npm run e2e:cypress:coverage
+
+   Open Cypress GUI with coverage enabled:
+   $ npm run e2e:cypress:coverage:open
+
+2. VIEW COVERAGE REPORTS
+   
+   - HTML Report: Open target/cypress/coverage/index.html in browser
+   - Console Summary: Available in terminal after test completion
+   - Additional Reports:
+     * JSON: target/cypress/coverage/coverage-final.json
+     * LCOV: target/cypress/coverage/lcov.info
+
+3. UNDERSTANDING COVERAGE REPORTS
+   
+   The coverage report shows:
+   - Statements: Percentage of code statements executed
+   - Branches: Percentage of code branches (if/else, switch cases) executed
+   - Functions: Percentage of functions called
+   - Lines: Percentage of code lines executed
+
+CI/CD INTEGRATION
+----------------
+
+1. GITHUB ACTIONS CONFIGURATION (.github/workflows/main.yml)
+   
+   - name: 'E2E: Run'
+     run: npm run ci:e2e:run
+     env:
+       CYPRESS_ENABLE_RECORD: false
+       CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
+       CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+
+   - name: Upload Test Coverage Reports
+     uses: actions/upload-artifact@v4
+     if: always()
+     with:
+       name: test-coverage-reports
+       path: |
+         target/cypress/coverage
+         target/test-results
+       retention-days: 30
+
+2. VIEWING CI COVERAGE REPORTS
+   
+   1. Go to GitHub repository
+   2. Navigate to Actions tab
+   3. Click on the workflow run
+   4. Under Artifacts, download "test-coverage-reports"
+   5. Extract the downloaded zip
+   6. Open cypress/coverage/index.html for E2E coverage
+   7. Open test-results/lcov-report/index.html for unit test coverage
+
+MAINTENANCE AND TROUBLESHOOTING
+------------------------------
+
+1. COMMON ISSUES AND SOLUTIONS
+
+   Coverage Not Collecting:
+   - Check if coverage: true is set in cypress.config.ts
+   - Verify support file imports coverage plugin
+   - Ensure plugins file registers coverage task
+
+   Missing Coverage Reports:
+   - Verify test run completed successfully
+   - Check if target directory has write permissions
+   - Look for error messages in test output
+
+   Low Coverage:
+   - Review uncovered lines in HTML report
+   - Add tests for uncovered scenarios
+   - Check if test assertions are working correctly
+
+2. BEST PRACTICES
+
+   Regular Maintenance:
+   - Run coverage reports locally before pushing
+   - Review coverage trends periodically
+   - Update dependencies when new versions are available
+
+   Coverage Goals:
+   - Set realistic coverage targets
+   - Focus on critical business logic
+   - Don't chase 100% coverage blindly
+
+   Test Quality:
+   - Write meaningful assertions
+   - Test edge cases
+   - Focus on user scenarios
+
+DIRECTORY STRUCTURE
+------------------
+
+your-project/
+├── .nycrc.json                 # Coverage configuration
+├── cypress.config.ts           # Cypress configuration
+├── src/
+│   └── test/
+│       └── javascript/
+│           └── cypress/
+│               ├── plugins/
+│               │   └── index.ts # Cypress plugins
+│               └── support/
+│                   └── index.ts # Cypress support
+└── target/
+    ├── cypress/
+    │   └── coverage/          # E2E coverage reports
+    └── test-results/          # Unit test coverage reports 
