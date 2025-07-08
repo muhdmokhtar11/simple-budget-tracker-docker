@@ -11,13 +11,13 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
-// @ts-ignore
+// @ts-expect-error - cypress-audit types are not properly exported
 import { lighthouse, pa11y, prepareAudit } from 'cypress-audit';
+import codeCoverage from '@cypress/code-coverage/task';
 
 export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) => {
   // Register coverage plugin
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  require('@cypress/code-coverage/task')(on, config);
+  codeCoverage(on, config);
 
   on('before:browser:launch', (browser, launchOptions) => {
     prepareAudit(launchOptions);
@@ -47,7 +47,7 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       }
       writeFileSync(
         'target/cypress/lhreport.html',
-        // @ts-ignore - lighthouse types are not properly exported
+        // @ts-expect-error - lighthouse types are not properly exported
         reportGenerator.generateReport(lighthouseReport.lhr, 'html'),
       );
     }),
