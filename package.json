@@ -39,7 +39,7 @@
     "e2e:cypress": "cypress run --e2e --browser chrome",
     "e2e:cypress:audits": "cypress run --e2e --browser chrome --config-file cypress-audits.config.js",
     "e2e:cypress:audits:headless": "npm run e2e:cypress -- --config-file cypress-audits.config.js",
-    "e2e:cypress:coverage": "cross-env NODE_ENV=coverage cypress run --e2e --browser chrome --env coverage=true",
+    "e2e:cypress:coverage": "concurrently -k -s first \"cross-env NODE_ENV=coverage npm run webapp:dev:coverage\" \"wait-on -t 180000 http-get://127.0.0.1:9000 && cross-env NODE_ENV=coverage cypress run --e2e --browser chrome --env coverage=true\"",
     "e2e:cypress:coverage:open": "cross-env NODE_ENV=coverage cypress open --e2e --env coverage=true",
     "e2e:cypress:coverage:report": "nyc report --reporter=html --reporter=text --report-dir=target/cypress/coverage",
     "e2e:cypress:headed": "npm run e2e:cypress -- --headed",
@@ -79,6 +79,7 @@
     "webapp:build:prod": "webpack --config webpack/webpack.prod.js --progress=profile",
     "webapp:dev": "npm run webpack-dev-server -- --config webpack/webpack.dev.js --env stats=minimal",
     "webapp:dev-verbose": "npm run webpack-dev-server -- --config webpack/webpack.dev.js --progress=profile --env stats=normal",
+    "webapp:dev:coverage": "npm run webpack-dev-server -- --config webpack/webpack.coverage.js --env stats=minimal",
     "webapp:prod": "npm run clean-www && npm run webapp:build:prod --",
     "webapp:test": "npm run test --",
     "webpack-dev-server": "webpack serve"
