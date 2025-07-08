@@ -9,6 +9,12 @@ if (!fs.existsSync(coverageDir)) {
   fs.mkdirSync(coverageDir, { recursive: true });
 }
 
+// Create .nyc_output directory if it doesn't exist
+const nycOutputDir = path.join(__dirname, '../.nyc_output');
+if (!fs.existsSync(nycOutputDir)) {
+  fs.mkdirSync(nycOutputDir, { recursive: true });
+}
+
 // Check if coverage data exists
 const coverageDataPath = path.join(__dirname, '../target/classes/static/coverage.json');
 if (fs.existsSync(coverageDataPath)) {
@@ -18,12 +24,23 @@ if (fs.existsSync(coverageDataPath)) {
       console.log('Coverage data found and processed');
       // Copy to coverage directory for nyc
       fs.writeFileSync(path.join(coverageDir, 'coverage.json'), JSON.stringify(coverageData, null, 2));
+      // Also create a basic .nyc_output file for nyc to work with
+      fs.writeFileSync(path.join(nycOutputDir, 'out.json'), JSON.stringify(coverageData, null, 2));
     } else {
       console.log('No coverage data available');
+      // Create empty coverage files to prevent nyc errors
+      fs.writeFileSync(path.join(coverageDir, 'coverage.json'), '{}');
+      fs.writeFileSync(path.join(nycOutputDir, 'out.json'), '{}');
     }
   } catch (error) {
     console.log('Error processing coverage data:', error.message);
+    // Create empty coverage files to prevent nyc errors
+    fs.writeFileSync(path.join(coverageDir, 'coverage.json'), '{}');
+    fs.writeFileSync(path.join(nycOutputDir, 'out.json'), '{}');
   }
 } else {
   console.log('No coverage data file found');
+  // Create empty coverage files to prevent nyc errors
+  fs.writeFileSync(path.join(coverageDir, 'coverage.json'), '{}');
+  fs.writeFileSync(path.join(nycOutputDir, 'out.json'), '{}');
 }

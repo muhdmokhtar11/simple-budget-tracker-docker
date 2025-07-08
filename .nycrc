@@ -7,6 +7,7 @@
     "text",
     "json"
   ],
+  "temp-dir": ".nyc_output",
   "exclude": [
     "coverage/**",
     "packages/*/test{,s}/**",

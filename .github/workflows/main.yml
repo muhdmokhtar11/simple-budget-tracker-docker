@@ -51,6 +51,7 @@ jobs:
       - name: 'Generate Coverage Report'
         run: |
           mkdir -p coverage
+          mkdir -p .nyc_output
           npx nyc report --reporter=html --reporter=text --reporter=json || echo "No coverage data found"
         if: always()
       - name: 'Upload Coverage Report'
