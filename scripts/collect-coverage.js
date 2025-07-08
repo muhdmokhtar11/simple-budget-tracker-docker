@@ -17,6 +17,8 @@ if (!fs.existsSync(nycOutputDir)) {
 
 // Check if coverage data exists
 const coverageDataPath = path.join(__dirname, '../target/classes/static/coverage.json');
+const cypressCoveragePath = path.join(__dirname, '../target/cypress/coverage');
+
 if (fs.existsSync(coverageDataPath)) {
   try {
     const coverageData = JSON.parse(fs.readFileSync(coverageDataPath, 'utf8'));
@@ -37,6 +39,22 @@ if (fs.existsSync(coverageDataPath)) {
     // Create empty coverage files to prevent nyc errors
     fs.writeFileSync(path.join(coverageDir, 'coverage.json'), '{}');
     fs.writeFileSync(path.join(nycOutputDir, 'out.json'), '{}');
+  }
+} else if (fs.existsSync(cypressCoveragePath)) {
+  console.log('Cypress coverage data found');
+  // Copy Cypress coverage files to our coverage directory
+  try {
+    const cypressCoverageFiles = fs.readdirSync(cypressCoveragePath);
+    cypressCoverageFiles.forEach(file => {
+      const sourcePath = path.join(cypressCoveragePath, file);
+      const destPath = path.join(coverageDir, file);
+      if (fs.statSync(sourcePath).isFile()) {
+        fs.copyFileSync(sourcePath, destPath);
+      }
+    });
+    console.log('Cypress coverage files copied successfully');
+  } catch (error) {
+    console.log('Error copying Cypress coverage files:', error.message);
   }
 } else {
   console.log('No coverage data file found');
