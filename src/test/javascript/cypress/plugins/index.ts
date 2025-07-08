@@ -11,9 +11,14 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
+// @ts-ignore
 import { lighthouse, pa11y, prepareAudit } from 'cypress-audit';
 
 export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) => {
+  // Register coverage plugin
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  require('@cypress/code-coverage/task')(on, config);
+
   on('before:browser:launch', (browser, launchOptions) => {
     prepareAudit(launchOptions);
     if (browser.name === 'chrome' && browser.isHeadless) {
@@ -36,11 +41,15 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
 
   on('task', {
     lighthouse: lighthouse(async lighthouseReport => {
-      const { default: ReportGenerator } = await import('lighthouse/report/generator/report-generator');
+      const reportGenerator = await import('lighthouse/report/generator/report-generator.js');
       if (!existsSync('target/cypress/')) {
         mkdirSync('target/cypress/', { recursive: true });
       }
-      writeFileSync('target/cypress/lhreport.html', ReportGenerator.generateReport(lighthouseReport.lhr, 'html'));
+      writeFileSync(
+        'target/cypress/lhreport.html',
+        // @ts-ignore - lighthouse types are not properly exported
+        reportGenerator.generateReport(lighthouseReport.lhr, 'html'),
+      );
     }),
     pa11y: pa11y(),
   });
