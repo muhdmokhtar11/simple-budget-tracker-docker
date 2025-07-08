@@ -18,12 +18,13 @@
     "build-watch": "concurrently 'npm run webapp:build:dev -- --watch' npm:backend:start",
     "ci:backend:test": "npm run backend:info && npm run backend:doc:test && npm run backend:nohttp:test && npm run backend:unit:test -- -P$npm_package_config_default_environment",
     "ci:e2e:dev": "concurrently -k -s first -n application,e2e -c red,blue npm:app:start npm:e2e:headless",
-    "ci:e2e:package": "npm run java:$npm_package_config_packaging:$npm_package_config_default_environment -- -Pe2e -Denforcer.skip=true",
+    "ci:e2e:package": "npm run java:jar:e2e -Dskip.npm=true",
     "ci:e2e:prepare": "npm run ci:e2e:prepare:docker",
     "ci:e2e:prepare:docker": "npm run services:up --if-present && docker ps -a",
-    "ci:e2e:run": "concurrently -k -s first -n application,e2e -c red,blue npm:ci:e2e:server:start npm:e2e:headless",
+    "ci:e2e:report": "nyc report --reporter=html --reporter=text",
+    "ci:e2e:run": "npm run ci:server:await && npm run e2e:cypress:coverage",
     "preci:e2e:server:start": "npm run services:db:await --if-present && npm run services:others:await --if-present",
-    "ci:e2e:server:start": "java -jar target/e2e.$npm_package_config_packaging --spring.profiles.active=e2e,$npm_package_config_default_environment -Dlogging.level.ROOT=OFF -Dlogging.level.tech.jhipster=OFF -Dlogging.level.com.mycompany.myapp=OFF -Dlogging.level.org.springframework=OFF -Dlogging.level.org.springframework.web=OFF -Dlogging.level.org.springframework.security=OFF --logging.level.org.springframework.web=ERROR",
+    "ci:e2e:server:start": "java -jar target/e2e.jar --spring.profiles.active=e2e,$npm_package_config_default_environment -Dlogging.level.ROOT=OFF -Dlogging.level.tech.jhipster=OFF -Dlogging.level.com.mycompany.myapp=OFF -Dlogging.level.org.springframework=OFF -Dlogging.level.org.springframework.web=OFF -Dlogging.level.org.springframework.security=OFF --logging.level.org.springframework.web=ERROR",
     "ci:e2e:teardown": "npm run ci:e2e:teardown:docker --if-present",
     "ci:e2e:teardown:docker": "docker compose -f src/main/docker/services.yml down -v && docker ps -a",
     "ci:frontend:test": "npm run webapp:build:$npm_package_config_default_environment && npm run test-ci",
@@ -38,6 +39,8 @@
     "e2e:cypress": "cypress run --e2e --browser chrome",
     "e2e:cypress:audits": "cypress run --e2e --browser chrome --config-file cypress-audits.config.js",
     "e2e:cypress:audits:headless": "npm run e2e:cypress -- --config-file cypress-audits.config.js",
+    "e2e:cypress:coverage": "cypress run --e2e --browser chrome --env coverage=true",
+    "e2e:cypress:coverage:open": "cypress open --e2e --env coverage=true",
     "e2e:cypress:headed": "npm run e2e:cypress -- --headed",
     "e2e:cypress:record": "npm run e2e:cypress -- --record",
     "e2e:dev": "concurrently -k -s first -n application,e2e -c red,blue npm:app:start npm:e2e",
@@ -50,6 +53,7 @@
     "java:docker:prod": "npm run java:docker -- -Pprod",
     "java:jar": "./mvnw -ntp verify -DskipTests --batch-mode",
     "java:jar:dev": "npm run java:jar -- -Pdev,webapp",
+    "java:jar:e2e": "npm run java:jar -- -Pe2e,webapp",
     "java:jar:prod": "npm run java:jar -- -Pprod",
     "java:war": "./mvnw -ntp verify -DskipTests --batch-mode -Pwar",
     "java:war:dev": "npm run java:war -- -Pdev,webapp",
@@ -79,12 +83,20 @@
     "webpack-dev-server": "webpack serve"
   },
   "config": {
-    "backend_port": 8080,
+    "backend_port": "8080",
     "default_environment": "prod",
     "packaging": "jar"
   },
   "overrides": {
-    "browser-sync": "3.0.4"
+    "browser-sync": "3.0.4",
+    "cypress-audit": {
+      "lighthouse": "^10.0.0",
+      "pa11y": "^7.0.0"
+    },
+    "sourcemap-istanbul-instrumenter-loader": {
+      "loader-utils": "^2.0.0",
+      "json5": "^2.0.0"
+    }
   },
   "dependencies": {
     "@eslint/js": "9.26.0",
@@ -117,6 +129,9 @@
     "webstomp-client": "1.2.6"
   },
   "devDependencies": {
+    "@cypress/code-coverage": "^3.14.5",
+    "@istanbuljs/nyc-config-typescript": "^1.0.2",
+    "@jsdevtools/coverage-istanbul-loader": "^3.0.5",
     "@testing-library/react": "16.3.0",
     "@types/jest": "29.5.14",
     "@types/lodash": "4.17.16",
@@ -127,6 +142,7 @@
     "@types/redux": "3.6.31",
     "@types/webpack-env": "1.18.8",
     "autoprefixer": "10.4.21",
+    "babel-plugin-istanbul": "^6.1.1",
     "browser-sync": "3.0.4",
     "browser-sync-webpack-plugin": "2.3.0",
     "concurrently": "9.1.2",
@@ -157,6 +173,7 @@
     "lighthouse": "12.6.0",
     "lint-staged": "15.5.2",
     "mini-css-extract-plugin": "2.9.2",
+    "nyc": "^15.1.0",
     "postcss-loader": "8.1.1",
     "prettier": "3.5.3",
     "prettier-plugin-java": "2.6.7",
