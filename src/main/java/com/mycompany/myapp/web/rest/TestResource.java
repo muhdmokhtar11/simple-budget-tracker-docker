@@ -26,7 +26,7 @@ public class TestResource {
     public ResponseEntity<String> getCoverage() {
         try {
             // Look for coverage data in the static directory
-            Path coveragePath = Paths.get("target/classes/static/coverage.json");
+            Path coveragePath = Path.of("target/classes/static/coverage.json");
             if (Files.exists(coveragePath)) {
                 String coverageData = Files.readString(coveragePath);
                 return ResponseEntity.ok().header("Content-Type", "application/json").body(coverageData);
