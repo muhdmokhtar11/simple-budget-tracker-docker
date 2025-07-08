@@ -12,8 +12,12 @@
 // the project's config changing)
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { lighthouse, pa11y, prepareAudit } from 'cypress-audit';
+import codeCoverage from '@cypress/code-coverage/task';
 
 export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) => {
+  // Register coverage plugin
+  codeCoverage(on, config);
+
   on('before:browser:launch', (browser, launchOptions) => {
     prepareAudit(launchOptions);
     if (browser.name === 'chrome' && browser.isHeadless) {
