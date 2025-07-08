@@ -17,6 +17,7 @@
     "build": "npm run webapp:prod --",
     "build-watch": "concurrently 'npm run webapp:build:dev -- --watch' npm:backend:start",
     "ci:backend:test": "npm run backend:info && npm run backend:doc:test && npm run backend:nohttp:test && npm run backend:unit:test -- -P$npm_package_config_default_environment",
+    "ci:e2e:coverage": "concurrently -k -s first -n application,e2e -c red,blue npm:ci:e2e:server:start \"wait-on -t 180000 http-get://127.0.0.1:8080/management/health && npm run e2e:cypress:coverage\"",
     "ci:e2e:dev": "concurrently -k -s first -n application,e2e -c red,blue npm:app:start npm:e2e:headless",
     "ci:e2e:package": "npm run java:$npm_package_config_packaging:$npm_package_config_default_environment -- -Pe2e -Denforcer.skip=true -Dskip.npm=true",
     "ci:e2e:prepare": "npm run ci:e2e:prepare:docker",

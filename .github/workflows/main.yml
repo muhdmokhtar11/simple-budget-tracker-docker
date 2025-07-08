@@ -36,8 +36,8 @@ jobs:
         run: npm run ci:e2e:package
       - name: 'E2E: Prepare'
         run: npm run ci:e2e:prepare
-      - name: 'E2E: Run'
-        run: npm run ci:e2e:run
+      - name: 'E2E: Run with Coverage'
+        run: npm run ci:e2e:coverage
         env:
           CYPRESS_ENABLE_RECORD: false
           CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
@@ -45,30 +45,7 @@ jobs:
       - name: 'E2E: Teardown'
         run: npm run ci:e2e:teardown
         if: always()
-      - name: 'E2E: Generate Coverage Report'
-        run: |
-          # Check if Cypress coverage exists and copy it to the expected location
-          if [ -d "target/cypress/coverage" ]; then
-            echo "Cypress coverage found, copying to coverage directory"
-            cp -r target/cypress/coverage/* coverage/ || true
-            # Also copy to .nyc_output for nyc compatibility
-            mkdir -p .nyc_output
-            if [ -f "target/cypress/coverage/coverage.json" ]; then
-              cp target/cypress/coverage/coverage.json .nyc_output/out.json
-            fi
-          else
-            echo "No Cypress coverage found, creating empty coverage"
-            mkdir -p coverage .nyc_output
-            echo '{}' > coverage/coverage.json
-            echo '{}' > .nyc_output/out.json
-          fi
-          # Generate additional reports if coverage data exists
-          if [ -f "coverage/coverage.json" ] && [ "$(cat coverage/coverage.json)" != "{}" ]; then
-            npx nyc report --reporter=html --reporter=text --reporter=lcov --reporter=json || echo "NYC report generation failed"
-          else
-            echo "No coverage data available for NYC report"
-          fi
-        if: always()
+
       - name: 'E2E: Upload Coverage Reports'
         uses: actions/upload-artifact@v4
         if: always()
