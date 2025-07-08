@@ -81,15 +81,5 @@ jobs:
           path: target/cypress/coverage/
           retention-days: 30
 
-      - name: 'E2E: Upload Coverage to Codecov'
-        uses: codecov/codecov-action@v4
-        if: always()
-        with:
-          files: target/cypress/coverage/lcov.info
-          flags: cypress-e2e
-          name: cypress-coverage
-          fail_ci_if_error: false
-          token: ${{ secrets.CODECOV_TOKEN }}
-
       - name: 'E2E: Teardown'
         run: npm run ci:e2e:teardown
