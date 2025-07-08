@@ -11,11 +11,13 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { lighthouse, pa11y, prepareAudit } from 'cypress-audit';
+import { lighthouse, pa11y, prepareAudit } from 'cypress-audit/dist';
+import codeCoverage from '@cypress/code-coverage/task';
+import type { ReportGenerator } from 'lighthouse/report/generator/report-generator';
 
 export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) => {
   // Initialize code coverage plugin
-  require('@cypress/code-coverage/task')(on, config);
+  codeCoverage(on, config);
 
   on('before:browser:launch', (browser, launchOptions) => {
     prepareAudit(launchOptions);
@@ -39,11 +41,13 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
 
   on('task', {
     lighthouse: lighthouse(async lighthouseReport => {
-      const { default: ReportGenerator } = await import('lighthouse/report/generator/report-generator');
+      const reportGenerator = (await import('lighthouse/report/generator/report-generator')) as {
+        generateReport: typeof ReportGenerator.generateReport;
+      };
       if (!existsSync('target/cypress/')) {
         mkdirSync('target/cypress/', { recursive: true });
       }
-      writeFileSync('target/cypress/lhreport.html', ReportGenerator.generateReport(lighthouseReport.lhr, 'html'));
+      writeFileSync('target/cypress/lhreport.html', reportGenerator.generateReport(lighthouseReport.lhr, 'html'));
     }),
     pa11y: pa11y(),
   });
