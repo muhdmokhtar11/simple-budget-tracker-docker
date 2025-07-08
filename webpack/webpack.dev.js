@@ -12,7 +12,7 @@ const ENV = 'development';
 
 module.exports = async options =>
   webpackMerge(await commonConfig({ env: ENV }), {
-    devtool: 'cheap-module-source-map', // https://reactjs.org/docs/cross-origin-errors.html
+    devtool: 'source-map', // Changed from 'cheap-module-source-map' for better coverage mapping
     mode: ENV,
     entry: ['./src/main/webapp/app/index'],
     output: {
@@ -41,6 +41,20 @@ module.exports = async options =>
               options: { implementation: sass },
             },
           ],
+        },
+        {
+          test: /\.(js|ts|tsx)$/,
+          exclude: /node_modules/,
+          use: [
+            {
+              loader: '@jsdevtools/coverage-istanbul-loader',
+              options: {
+                esModules: true,
+                produceSourceMap: true,
+              },
+            },
+          ],
+          enforce: 'post',
         },
       ],
     },
