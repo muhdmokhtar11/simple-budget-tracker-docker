@@ -40,5 +40,14 @@ jobs:
           CYPRESS_ENABLE_RECORD: false
           CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          CYPRESS_COVERAGE: true
+      - name: 'E2E: Generate Coverage Report'
+        run: npm run nyc report --reporter=html
+      - name: 'Upload Coverage Report'
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-coverage-report
+          path: target/cypress/coverage
+          retention-days: 30
       - name: 'E2E: Teardown'
         run: npm run ci:e2e:teardown
