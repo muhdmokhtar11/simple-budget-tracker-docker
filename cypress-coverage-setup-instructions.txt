@@ -1,0 +1,65 @@
+Updated Prompt for Cypress Code Coverage in JHipster CI/CD Pipeline
+
+I need your help to add Cypress code coverage to my JHipster project's CI/CD pipeline. The goal is to instrument the frontend code, run the E2E tests, and generate a coverage report in the .github/workflows/main.yml workflow.
+
+This task is tricky because of the build and packaging process. A naive implementation often results in 0/0 coverage in CI/CD because the tests run against non-instrumented code. Please follow these specific steps to ensure it works correctly.
+
+Your Task:
+
+Modify the CI/CD pipeline to correctly build and test the application with Cypress code coverage enabled.
+
+Key Requirements & Implementation Steps:
+
+1. Modify pom.xml to Control the Frontend Build:
+- Add a new property, <skip.npm>false</skip.npm>, to the <properties> section.
+- Configure the frontend-maven-plugin to use this property by adding <skip>${skip.npm}</skip> to its <configuration> block. This will allow us to prevent Maven from rebuilding the frontend during the packaging phase.
+
+2. Update package.json for E2E Packaging:
+- Find the ci:e2e:package script.
+- Modify it to pass the -Dskip.npm=true flag to the Maven command. This will ensure that when we package the application for E2E tests, it uses the frontend code we have already built, rather than creating a new, non-instrumented build.
+
+3. Restructure the .github/workflows/main.yml Pipeline:
+The order of operations is critical. Please refactor the E2E testing steps in the pipeline to follow this exact sequence:
+
+Build with Coverage: Run the npm run webapp:build:e2e command. This must happen before packaging.
+
+Package Instrumented App: Run the npm run ci:e2e:package command. This will package the instrumented code built in the previous step into the e2e.jar.
+
+Prepare E2E Environment: Run npm run ci:e2e:prepare to start necessary services (like databases).
+
+Run E2E Tests: Execute the npm run ci:e2e:run command, which starts the server (using the instrumented .jar) and runs the Cypress tests against it. Ensure this step waits for the server to be healthy before starting the tests.
+
+Generate & Upload Reports: Add steps to generate the final code coverage report and upload the HTML output as a downloadable build artifact. These steps must run even if the tests fail using if: always().
+
+4. Coverage Report Generation:
+The coverage results are generated in target/cypress/coverage/index.html. Please ensure the CI/CD workflow includes these specific steps:
+
+- name: 'E2E: Generate Coverage Report'
+  run: npx nyc report --reporter=html --reporter=text --reporter=lcov --reporter=json
+  if: always()
+- name: 'E2E: Upload Coverage Reports'
+  uses: actions/upload-artifact@v4
+  if: always()
+  with:
+    name: cypress-coverage-report
+    path: target/cypress/coverage/
+    retention-days: 30
+
+5. Code Coverage Instrumentation:
+- Added code coverage instrumentation to webpack.dev.js:
+  - Added a new rule that uses @jsdevtools/coverage-istanbul-loader to instrument JavaScript/TypeScript files
+  - The instrumentation only happens when NODE_ENV=test
+  - Excludes test files and node_modules from instrumentation
+  - Uses the enforce: 'post' option to ensure instrumentation happens after other transformations
+
+6. Configure GitHub Actions main.yml file:
+- Setting NODE_ENV=test when building for E2E tests
+- Ensuring the coverage reports are generated from target/cypress/coverage/ directory
+- Uploading the coverage artifacts with the name cypress-coverage-report
+
+This updated prompt now accurately reflects the current implementation where:
+- The pom.xml has been modified with the skip.npm property
+- The package.json ci:e2e:package script has been updated
+- The GitHub Actions workflow has been restructured with the correct sequence
+- The coverage reports are generated from target/cypress/coverage/
+- The specific E2E coverage steps are included as requested 
