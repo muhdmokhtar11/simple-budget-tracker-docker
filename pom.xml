@@ -36,6 +36,7 @@
         <m2e.apt.activation>jdt_apt</m2e.apt.activation>
         <run.addResources>false</run.addResources>
         <spring-boot.version>${project.parent.version}</spring-boot.version>
+        <skip.npm>false</skip.npm>
         <archunit-junit5.version>1.4.0</archunit-junit5.version>
         <checkstyle.version>10.23.1</checkstyle.version>
         <checksum-maven-plugin.version>1.11</checksum-maven-plugin.version>
@@ -677,6 +678,7 @@
                         <installDirectory>target</installDirectory>
                         <nodeVersion>${node.version}</nodeVersion>
                         <npmVersion>${npm.version}</npmVersion>
+                        <skip>${skip.npm}</skip>
                     </configuration>
                 </plugin>
                 <plugin>

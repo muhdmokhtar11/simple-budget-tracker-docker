@@ -1,0 +1,30 @@
+{
+  "extends": "@istanbuljs/nyc-config-typescript",
+  "all": true,
+  "check-coverage": false,
+  "reporter": [
+    "html",
+    "text",
+    "json"
+  ],
+  "exclude": [
+    "coverage/**",
+    "packages/*/test{,s}/**",
+    "**/*.d.ts",
+    "cypress/**",
+    "test{,s}/**",
+    "test{,-*}.{js,cjs,mjs,ts,tsx,jsx}",
+    "**/*{.,-}test.{js,cjs,mjs,ts,tsx,jsx}",
+    "**/*{.,-}spec.{js,cjs,mjs,ts,tsx,jsx}",
+    "**/__tests__/**",
+    "**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build}.config.*",
+    "**/.{eslint,mocha,prettier}rc.{js,cjs,yml}",
+    "**/node_modules/**",
+    "src/test/**",
+    "src/main/webapp/app/**/*.spec.{js,ts,tsx}",
+    "src/main/webapp/app/**/*.test.{js,ts,tsx}"
+  ],
+  "include": [
+    "src/main/webapp/app/**/*.{js,ts,tsx}"
+  ]
+} 

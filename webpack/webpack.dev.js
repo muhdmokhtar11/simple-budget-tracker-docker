@@ -4,6 +4,7 @@ const SimpleProgressWebpackPlugin = require('simple-progress-webpack-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const path = require('path');
 const sass = require('sass');
+const fs = require('fs');
 
 const utils = require('./utils.js');
 const commonConfig = require('./webpack.common.js');
@@ -42,6 +43,24 @@ module.exports = async options =>
             },
           ],
         },
+        // Code coverage instrumentation for E2E tests
+        ...(process.env.NODE_ENV === 'test'
+          ? [
+              {
+                test: /\.(js|jsx|ts|tsx)$/,
+                exclude: [/node_modules/, /\.(spec|test)\.(js|jsx|ts|tsx)$/, /cypress/, /src\/test\//],
+                use: {
+                  loader: '@jsdevtools/coverage-istanbul-loader',
+                  options: {
+                    coverageVariable: '__coverage__',
+                    coverageGlobalScope: 'window',
+                    coverageGlobalVar: '__coverage__',
+                  },
+                },
+                enforce: 'post',
+              },
+            ]
+          : []),
       ],
     },
     devServer: {
@@ -72,6 +91,24 @@ module.exports = async options =>
         : new SimpleProgressWebpackPlugin({
             format: options.stats === 'minimal' ? 'compact' : 'expanded',
           }),
+      // Coverage plugin for E2E tests
+      ...(process.env.NODE_ENV === 'test'
+        ? [
+            {
+              apply: compiler => {
+                compiler.hooks.afterEmit.tap('CoveragePlugin', () => {
+                  // Create coverage.json file for backend access
+                  const coveragePath = path.join(__dirname, '../target/classes/static/coverage.json');
+                  const coverageDir = path.dirname(coveragePath);
+                  if (!fs.existsSync(coverageDir)) {
+                    fs.mkdirSync(coverageDir, { recursive: true });
+                  }
+                  fs.writeFileSync(coveragePath, '{}');
+                });
+              },
+            },
+          ]
+        : []),
       new BrowserSyncPlugin(
         {
           https: options.tls,
