@@ -35,7 +35,7 @@ jobs:
       - name: 'E2E: Prepare'
         run: npm run ci:e2e:prepare
       - name: 'E2E: Run'
-        run: npm run ci:e2e:run
+        run: npm run e2e:cypress:coverage
         env:
           CYPRESS_ENABLE_RECORD: false
           CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
