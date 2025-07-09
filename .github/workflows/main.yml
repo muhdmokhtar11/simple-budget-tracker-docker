@@ -1,4 +1,3 @@
-# .github/workflows/application-ci.yml
 name: Application CI
 on: [push, pull_request]
 jobs:
@@ -8,65 +7,43 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.pull_request.title, '[skip ci]') && !contains(github.event.pull_request.title, '[ci skip]')"
     timeout-minutes: 40
     env:
-      NODE_VERSION: '22.x' # Use a floating version to get latest patches
+      NODE_VERSION: 22.15.0
       SPRING_OUTPUT_ANSI_ENABLED: DETECT
       SPRING_JPA_SHOW_SQL: false
       JHI_DISABLE_WEBPACK_LOGS: true
-
     steps:
-      - name: 'Checkout source code'
-        uses: actions/checkout@v4
-
-      - name: 'Set up Node.js'
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm' # Enable caching for npm dependencies
-
-      - name: 'Set up Java and Maven'
-        uses: actions/setup-java@v4
+          node-version: 22.15.0
+      - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
-          cache: 'maven' # Enable caching for Maven dependencies
-
-      - name: 'Install Node.js packages'
+          java-version: 17
+      - name: Install Node.js packages
         run: npm install
-
-      - name: 'Run backend tests'
+      - name: Run backend test
         run: |
           chmod +x mvnw
           npm run ci:backend:test
-
-      - name: 'Run frontend tests'
+      - name: Run frontend test
         run: npm run ci:frontend:test
-
-      # --- KEY CHANGE STARTS HERE ---
-      # 1. Build an INSTRUMENTED version of the application for E2E tests.
-      #    DO NOT use a production build like 'java:jar:prod'.
-      - name: 'Package instrumented application for E2E tests'
-        run: npm run ci:e2e:package:instrumented # You must create this script in package.json
-        env:
-          # Force development mode for the build to ensure instrumentation is included
-          NODE_ENV: development
-
-      - name: 'Start backend server with instrumented code'
+      - name: Package application
+        run: npm run java:jar:prod
+      - name: 'E2E: Package'
+        run: npm run ci:e2e:package
+      - name: 'E2E: Prepare'
+        run: npm run ci:e2e:prepare
+      - name: 'Start backend server'
         run: |
-          # Run the packaged JAR from the previous step in the background
-          # Using a wildcard is more robust than specifying the exact JAR name
-          java -jar target/*.jar &
-          # Give the server enough time to start up before tests begin
-          sleep 45
-      # --- KEY CHANGE ENDS HERE ---
-      - name: 'Run E2E tests with coverage'
+          chmod +x mvnw
+          ./mvnw &
+          sleep 30 # Wait for the server to start
+      - name: 'E2E: Run'
         run: npm run e2e:cypress:coverage
         env:
-          # CYPRESS_RECORD_KEY is a secret and should not be exposed
-          CYPRESS_ENABLE_RECORD: false # Set to true if you want to record to Cypress Cloud
+          CYPRESS_ENABLE_RECORD: false
           CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-
       - name: 'E2E: Teardown'
-        # This step is conditional and will run even if the E2E tests fail
-        if: always()
         run: npm run ci:e2e:teardown
