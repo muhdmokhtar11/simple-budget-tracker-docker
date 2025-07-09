@@ -34,16 +34,22 @@ jobs:
         run: npm run ci:e2e:package
       - name: 'E2E: Prepare'
         run: npm run ci:e2e:prepare
-      - name: 'Start backend server'
+      - name: 'Start application in dev mode'
         run: |
           chmod +x mvnw
-          ./mvnw &
-          sleep 30 # Wait for the server to start
+          npm run ci:e2e:dev &
+          sleep 60 # Wait for both backend and frontend to start
       - name: 'E2E: Run'
         run: npm run e2e:cypress:coverage
         env:
           CYPRESS_ENABLE_RECORD: false
           CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+      - name: 'Upload coverage reports'
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-reports
+          path: target/cypress/coverage/
       - name: 'E2E: Teardown'
         run: npm run ci:e2e:teardown
